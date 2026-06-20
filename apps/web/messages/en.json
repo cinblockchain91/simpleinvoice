@@ -1,0 +1,93 @@
+{
+  "common": {
+    "appName": "SimpleInvoice",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "status": {
+      "DRAFT": "Draft",
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "VOID": "Void"
+    }
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter your username",
+    "passwordPlaceholder": "Enter your password",
+    "loginError": "Invalid username or password",
+    "loginLoading": "Logging in..."
+  },
+  "invoices": {
+    "title": "Invoices",
+    "empty": "No invoices found",
+    "columns": {
+      "invoiceNumber": "Invoice #",
+      "customer": "Customer",
+      "issueDate": "Issue Date",
+      "dueDate": "Due Date",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by invoice # or customer",
+      "statusPlaceholder": "Filter by status",
+      "allStatuses": "All statuses"
+    },
+    "pagination": {
+      "showing": "Showing {from}–{to} of {total} invoices"
+    }
+  },
+  "createInvoice": {
+    "title": "Create Invoice",
+    "fields": {
+      "invoiceNumber": "Invoice Number",
+      "currency": "Currency",
+      "issueDate": "Issue Date",
+      "dueDate": "Due Date",
+      "customerName": "Customer Name",
+      "customerId": "Customer ID"
+    },
+    "lineItems": {
+      "title": "Line Items",
+      "addItem": "Add Item",
+      "description": "Description",
+      "quantity": "Qty",
+      "unitPrice": "Unit Price",
+      "taxRate": "Tax %",
+      "amount": "Amount",
+      "removeItem": "Remove"
+    },
+    "validation": {
+      "invoiceNumberRequired": "Invoice number is required",
+      "currencyInvalid": "Currency must be a 3-letter ISO 4217 code",
+      "issueDateRequired": "Issue date is required",
+      "dueDateRequired": "Due date is required",
+      "customerNameRequired": "Customer name is required",
+      "customerIdRequired": "Customer ID is required",
+      "itemsRequired": "At least one line item is required",
+      "quantityPositive": "Quantity must be greater than 0",
+      "unitPriceNonNegative": "Unit price must be 0 or greater"
+    },
+    "submit": "Create Invoice",
+    "submitLoading": "Creating...",
+    "successMessage": "Invoice created successfully"
+  },
+  "metadata": {
+    "title": "SimpleInvoice",
+    "description": "Professional invoicing made simple"
+  }
+}

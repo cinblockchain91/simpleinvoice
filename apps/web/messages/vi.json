@@ -1,0 +1,93 @@
+{
+  "common": {
+    "appName": "SimpleInvoice",
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "clear": "Xóa bộ lọc",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "status": {
+      "DRAFT": "Nháp",
+      "PENDING": "Chờ duyệt",
+      "APPROVED": "Đã duyệt",
+      "REJECTED": "Từ chối",
+      "VOID": "Đã hủy"
+    }
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "usernamePlaceholder": "Nhập tên đăng nhập",
+    "passwordPlaceholder": "Nhập mật khẩu",
+    "loginError": "Tên đăng nhập hoặc mật khẩu không đúng",
+    "loginLoading": "Đang đăng nhập..."
+  },
+  "invoices": {
+    "title": "Hóa đơn",
+    "empty": "Không tìm thấy hóa đơn nào",
+    "columns": {
+      "invoiceNumber": "Số hóa đơn",
+      "customer": "Khách hàng",
+      "issueDate": "Ngày phát hành",
+      "dueDate": "Ngày đến hạn",
+      "amount": "Số tiền",
+      "status": "Trạng thái"
+    },
+    "filters": {
+      "searchPlaceholder": "Tìm theo số hóa đơn hoặc khách hàng",
+      "statusPlaceholder": "Lọc theo trạng thái",
+      "allStatuses": "Tất cả trạng thái"
+    },
+    "pagination": {
+      "showing": "Hiển thị {from}–{to} trong {total} hóa đơn"
+    }
+  },
+  "createInvoice": {
+    "title": "Tạo hóa đơn",
+    "fields": {
+      "invoiceNumber": "Số hóa đơn",
+      "currency": "Đơn vị tiền tệ",
+      "issueDate": "Ngày phát hành",
+      "dueDate": "Ngày đến hạn",
+      "customerName": "Tên khách hàng",
+      "customerId": "Mã khách hàng"
+    },
+    "lineItems": {
+      "title": "Danh sách mục",
+      "addItem": "Thêm mục",
+      "description": "Mô tả",
+      "quantity": "SL",
+      "unitPrice": "Đơn giá",
+      "taxRate": "Thuế %",
+      "amount": "Thành tiền",
+      "removeItem": "Xóa"
+    },
+    "validation": {
+      "invoiceNumberRequired": "Vui lòng nhập số hóa đơn",
+      "currencyInvalid": "Đơn vị tiền tệ phải là mã ISO 4217 gồm 3 ký tự",
+      "issueDateRequired": "Vui lòng chọn ngày phát hành",
+      "dueDateRequired": "Vui lòng chọn ngày đến hạn",
+      "customerNameRequired": "Vui lòng nhập tên khách hàng",
+      "customerIdRequired": "Vui lòng nhập mã khách hàng",
+      "itemsRequired": "Phải có ít nhất một mục",
+      "quantityPositive": "Số lượng phải lớn hơn 0",
+      "unitPriceNonNegative": "Đơn giá phải lớn hơn hoặc bằng 0"
+    },
+    "submit": "Tạo hóa đơn",
+    "submitLoading": "Đang tạo...",
+    "successMessage": "Tạo hóa đơn thành công"
+  },
+  "metadata": {
+    "title": "SimpleInvoice",
+    "description": "Quản lý hóa đơn chuyên nghiệp"
+  }
+}

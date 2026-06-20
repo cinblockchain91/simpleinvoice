@@ -9,6 +9,8 @@ const FSD_ELEMENTS = [
   { type: "shadcn", pattern: "src/shadcn/**/*" },
   // shared/ — framework-agnostic utilities, no business logic
   { type: "shared", pattern: "src/shared/**/*" },
+  // i18n/ — next-intl routing/navigation config; importable by app + features + widgets
+  { type: "i18n", pattern: "src/i18n/**" },
   // entities/ — business entity UI representations (badges, cards)
   { type: "entities", pattern: "src/entities/**/*" },
   // features/ — user interaction slices (forms, search, auth)
@@ -32,10 +34,15 @@ const FSD_ELEMENTS = [
 const FSD_ELEMENT_RULES = [
   { from: "shadcn", allow: [] },
   { from: "shared", allow: ["shadcn"] },
+  // i18n depends on nothing in the app layers
+  { from: "i18n", allow: [] },
   { from: "entities", allow: ["shared", "shadcn"] },
   // features cannot import other features (cross-feature import prevention)
-  { from: "features", allow: ["entities", "shared", "shadcn"] },
-  { from: "widgets", allow: ["features", "entities", "shared", "shadcn"] },
+  { from: "features", allow: ["entities", "shared", "shadcn", "i18n"] },
+  {
+    from: "widgets",
+    allow: ["features", "entities", "shared", "shadcn", "i18n"],
+  },
   // app/api route handlers are the only permitted importers of infrastructure
   {
     from: "app",
@@ -46,6 +53,7 @@ const FSD_ELEMENT_RULES = [
       "shared",
       "shadcn",
       "infrastructure",
+      "i18n",
     ],
   },
   { from: "infrastructure", allow: ["shared"] },
