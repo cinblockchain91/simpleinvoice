@@ -28,14 +28,14 @@ export class InvoiceAdapter implements InvoiceRepository {
   ): Promise<Result<PaginatedResult<Invoice>, InvoiceError>> {
     try {
       const query = new URLSearchParams({
-        page: String(params.page),
+        pageNum: String(params.page),
         pageSize: String(params.pageSize),
       });
       if (params.status) query.set("statuses", params.status);
       if (params.keyword) query.set("keyword", params.keyword);
 
       const res = await fetch(
-        `${env.DIGITAL_BASE_URL}/invoice-service/2.0.0/invoices?${query}`,
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices?${query}`,
         {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
@@ -75,7 +75,7 @@ export class InvoiceAdapter implements InvoiceRepository {
   async getById(id: string): Promise<Result<Invoice, InvoiceError>> {
     try {
       const res = await fetch(
-        `${env.DIGITAL_BASE_URL}/invoice-service/2.0.0/invoices/${id}`,
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices/${id}`,
         {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
@@ -105,7 +105,7 @@ export class InvoiceAdapter implements InvoiceRepository {
   ): Promise<Result<Invoice, InvoiceError>> {
     try {
       const res = await fetch(
-        `${env.DIGITAL_BASE_URL}/invoice-service/2.0.0/invoices`,
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices`,
         {
           method: "POST",
           headers: {
