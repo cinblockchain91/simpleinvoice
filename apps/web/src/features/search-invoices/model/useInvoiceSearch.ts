@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useRef } from "react";
 
 interface UseInvoiceSearchReturn {
   keyword: string;
@@ -13,7 +13,7 @@ export function useInvoiceSearch(debounceMs = 400): UseInvoiceSearchReturn {
   const [keyword, setKeywordRaw] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [isPending, startTransition] = useTransition();
-  const timerRef = { current: 0 as ReturnType<typeof setTimeout> };
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const setKeyword = useCallback(
     (value: string) => {
