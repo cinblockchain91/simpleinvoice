@@ -21,18 +21,22 @@ export class AuthAdapter implements AuthPort {
     // Step 1: Exchange credentials for access_token via OAuth2 password grant
     let accessToken: string;
     try {
-      const tokenRes = await fetch(`${env.DIGITAL_BASE_URL}/oauth2/token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          grant_type: "password",
-          client_id: env.DIGITAL_CLIENT_ID,
-          client_secret: env.DIGITAL_CLIENT_SECRET,
-          username: credentials.username,
-          password: credentials.password,
-        }),
-        cache: "no-store",
-      });
+      const tokenRes = await fetch(
+        `${env.DIGITAL_AUTH_BASE_URL}/t/101digital.core/oauth2/token`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            grant_type: "password",
+            client_id: env.DIGITAL_CLIENT_ID,
+            client_secret: env.DIGITAL_CLIENT_SECRET,
+            scope: "openid",
+            username: credentials.username,
+            password: credentials.password,
+          }),
+          cache: "no-store",
+        },
+      );
 
       if (tokenRes.status === 400 || tokenRes.status === 401) {
         return fail(new InvalidCredentialsError());
@@ -52,11 +56,11 @@ export class AuthAdapter implements AuthPort {
       return fail(new AuthServiceUnavailableError(String(err)));
     }
 
-    // Step 2: Fetch org token from membership service
+    // Step 2: Fetch org token from membership service (memberships[0].token)
     let orgToken: string;
     try {
       const memberRes = await fetch(
-        `${env.DIGITAL_BASE_URL}/membership-service/2.0.0/users/me/memberships`,
+        `${env.DIGITAL_API_BASE_URL}/membership-service/1.0.0/users/me`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -75,7 +79,8 @@ export class AuthAdapter implements AuthPort {
       }
 
       const memberData = await memberRes.json();
-      orgToken = memberData?.data?.[0]?.token;
+      const data = memberData?.data ?? memberData;
+      orgToken = data?.memberships?.[0]?.token;
 
       if (!orgToken) {
         return fail(

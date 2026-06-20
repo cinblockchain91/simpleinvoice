@@ -10,7 +10,8 @@
         "NODE_ENV",
         "DIGITAL_CLIENT_ID",
         "DIGITAL_CLIENT_SECRET",
-        "DIGITAL_BASE_URL"
+        "DIGITAL_AUTH_BASE_URL",
+        "DIGITAL_API_BASE_URL"
       ]
     },
     "dev": {
