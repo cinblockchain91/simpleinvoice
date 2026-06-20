@@ -10,12 +10,26 @@ const schema = z.object({
     .default("development"),
 });
 
-const parsed = schema.safeParse(process.env);
+type Env = z.infer<typeof schema>;
 
-if (!parsed.success) {
-  const formatted = parsed.error.flatten().fieldErrors;
-  console.error("❌ Invalid environment variables:\n", formatted);
-  throw new Error("Invalid environment variables — check .env.local");
+let _env: Env | undefined;
+
+function getValidatedEnv(): Env {
+  if (_env) return _env;
+  const parsed = schema.safeParse(process.env);
+  if (!parsed.success) {
+    const formatted = parsed.error.flatten().fieldErrors;
+    console.error("Invalid environment variables:\n", formatted);
+    throw new Error("Invalid environment variables — check .env.local");
+  }
+  _env = parsed.data;
+  return _env;
 }
 
-export const env = parsed.data;
+// Lazily validated proxy — defers env parsing to first request so that
+// Next.js can build without runtime secrets present in CI.
+export const env = new Proxy({} as Env, {
+  get(_, prop: string | symbol) {
+    return getValidatedEnv()[prop as keyof Env];
+  },
+});
