@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
-  "buildCommand": "cd ../.. && pnpm --filter @simpleinvoice/web build",
-  "outputDirectory": ".next"
-}
