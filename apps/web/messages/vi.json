@@ -33,6 +33,7 @@
   },
   "invoices": {
     "title": "Hóa đơn",
+    "createInvoice": "Tạo hóa đơn",
     "empty": "Không tìm thấy hóa đơn nào",
     "columns": {
       "invoiceNumber": "Số hóa đơn",
