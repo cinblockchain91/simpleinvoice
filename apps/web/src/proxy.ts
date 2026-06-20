@@ -34,6 +34,17 @@ async function authProxy(request: NextRequest): Promise<NextResponse> {
     (p) => path === p || path.startsWith(`${p}/`),
   );
   const isAuthRoute = AUTH_PATHS.some((p) => path === p);
+  const isRoot = path === "/";
+
+  // Root always redirects — to invoices if authenticated, to login if not
+  if (isRoot) {
+    return NextResponse.redirect(
+      new URL(
+        hasToken ? `/${locale}/invoices` : `/${locale}/login`,
+        request.url,
+      ),
+    );
+  }
 
   if (isProtected && !hasToken) {
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
