@@ -1,4 +1,5 @@
 import "server-only";
+import { z } from "zod";
 import {
   ok,
   fail,
@@ -10,12 +11,91 @@ import type {
   InvoiceRepository,
   ListInvoicesParams,
   Invoice,
+  InvoiceStatus,
   CreateInvoiceData,
   InvoiceError,
 } from "@simpleinvoice/domain";
 import type { Result, PaginatedResult } from "@simpleinvoice/domain";
-import { ListInvoicesResponseSchema } from "@simpleinvoice/api-contracts";
 import { env } from "@/shared/config/env.server";
+
+// ─── Raw 101Digital response schemas ─────────────────────────────────────────
+
+const ApiStatusSchema = z.array(
+  z.object({ key: z.string(), value: z.boolean() }),
+);
+
+const ApiInvoiceSchema = z
+  .object({
+    invoiceId: z.string(),
+    invoiceNumber: z.string(),
+    currency: z.string(),
+    invoiceDate: z.string(),
+    dueDate: z.string(),
+    invoiceSubTotal: z.number(),
+    totalTax: z.number(),
+    totalAmount: z.number(),
+    status: ApiStatusSchema,
+    customer: z.object({ id: z.string() }).passthrough(),
+    createdAt: z.string().optional(),
+  })
+  .passthrough();
+
+const ApiListResponseSchema = z
+  .object({
+    data: z.array(ApiInvoiceSchema),
+    metadata: z
+      .object({
+        total: z.number().optional(),
+        currentPage: z.number().optional(),
+        pageSize: z.number().optional(),
+      })
+      .optional(),
+    total: z.number().optional(),
+    currentPage: z.number().optional(),
+  })
+  .passthrough();
+
+// ─── Status mapping ───────────────────────────────────────────────────────────
+
+const STATUS_MAP: Record<string, InvoiceStatus> = {
+  Draft: "DRAFT",
+  Due: "PENDING",
+  PartiallyPaid: "PENDING",
+  Approved: "APPROVED",
+  Paid: "APPROVED",
+  Rejected: "REJECTED",
+  Void: "VOID",
+  Cancelled: "VOID",
+};
+
+function mapStatus(
+  status: Array<{ key: string; value: boolean }>,
+): InvoiceStatus {
+  const active = status.find((s) => s.value)?.key ?? "";
+  return STATUS_MAP[active] ?? "PENDING";
+}
+
+function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
+  const customer = api.customer as { id: string; name?: string };
+  return {
+    id: api.invoiceId,
+    invoiceNumber: api.invoiceNumber,
+    status: mapStatus(api.status),
+    currency: api.currency,
+    totalAmount: api.totalAmount,
+    subTotal: api.invoiceSubTotal,
+    taxAmount: api.totalTax,
+    issueDate: api.invoiceDate,
+    dueDate: api.dueDate,
+    customerId: customer.id,
+    customerName: customer.name ?? customer.id,
+    items: [],
+    createdDate: api.createdAt ?? api.invoiceDate,
+    modifiedDate: api.createdAt ?? api.invoiceDate,
+  };
+}
+
+// ─── Adapter ─────────────────────────────────────────────────────────────────
 
 export class InvoiceAdapter implements InvoiceRepository {
   constructor(
@@ -47,25 +127,30 @@ export class InvoiceAdapter implements InvoiceRepository {
       );
 
       if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error(`[InvoiceAdapter.list] ${res.status}:`, errBody);
         return fail(new InvoiceFetchError(`API returned ${res.status}`));
       }
 
       const raw = await res.json();
-      const parsed = ListInvoicesResponseSchema.safeParse(raw);
+      const parsed = ApiListResponseSchema.safeParse(raw);
       if (!parsed.success) {
-        return fail(
-          new InvoiceFetchError(
-            "Unexpected response shape from invoice service",
-          ),
+        console.error(
+          "[InvoiceAdapter.list] Unexpected shape:",
+          parsed.error.message,
         );
+        return fail(new InvoiceFetchError("Unexpected response shape"));
       }
 
-      const { data, total, page, pageSize } = parsed.data;
+      const invoices = parsed.data.data.map(mapApiInvoice);
+      const total =
+        parsed.data.total ?? parsed.data.metadata?.total ?? invoices.length;
+
       return ok({
-        data: data as readonly Invoice[],
+        data: invoices as readonly Invoice[],
         total,
-        page,
-        pageSize,
+        page: params.page,
+        pageSize: params.pageSize,
       });
     } catch (err) {
       return fail(new InvoiceFetchError(String(err)));
@@ -86,15 +171,16 @@ export class InvoiceAdapter implements InvoiceRepository {
         },
       );
 
-      if (res.status === 404) {
-        return fail(new InvoiceNotFoundError(id));
-      }
-      if (!res.ok) {
+      if (res.status === 404) return fail(new InvoiceNotFoundError(id));
+      if (!res.ok)
         return fail(new InvoiceFetchError(`API returned ${res.status}`));
-      }
 
       const raw = await res.json();
-      return ok(raw?.data ?? (raw as Invoice));
+      const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);
+      if (!apiInvoice.success)
+        return fail(new InvoiceFetchError("Unexpected response shape"));
+
+      return ok(mapApiInvoice(apiInvoice.data));
     } catch (err) {
       return fail(new InvoiceFetchError(String(err)));
     }
@@ -118,12 +204,15 @@ export class InvoiceAdapter implements InvoiceRepository {
         },
       );
 
-      if (!res.ok) {
+      if (!res.ok)
         return fail(new InvoiceCreateError(`API returned ${res.status}`));
-      }
 
       const raw = await res.json();
-      return ok(raw?.data ?? (raw as Invoice));
+      const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);
+      if (!apiInvoice.success)
+        return fail(new InvoiceCreateError("Unexpected response shape"));
+
+      return ok(mapApiInvoice(apiInvoice.data));
     } catch (err) {
       return fail(new InvoiceCreateError(String(err)));
     }
