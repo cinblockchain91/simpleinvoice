@@ -1,0 +1,10 @@
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+ALLOWED_PATTERN='^(main|develop|feature\/[0-9]+-[a-z0-9-]+|fix\/[0-9]+-[a-z0-9-]+|chore\/[0-9]+-[a-z0-9-]+|ci\/[0-9]+-[a-z0-9-]+|docs\/[0-9]+-[a-z0-9-]+|refactor\/[0-9]+-[a-z0-9-]+|hotfix\/[0-9]+-[a-z0-9-]+|release\/.+)$'
+
+if ! echo "$BRANCH" | grep -qE "$ALLOWED_PATTERN"; then
+  echo "Branch name '$BRANCH' does not match the required pattern."
+  echo "Use: feature/<issue-number>-<description> or fix/<issue-number>-<description>"
+  exit 1
+fi
+
+pnpm type-check

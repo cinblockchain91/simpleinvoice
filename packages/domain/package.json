@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@simpleinvoice/config": "workspace:*",
     "typescript": "^5"
   }
 }

@@ -5,7 +5,13 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "NODE_ENV",
+        "DIGITAL_CLIENT_ID",
+        "DIGITAL_CLIENT_SECRET",
+        "DIGITAL_BASE_URL"
+      ]
     },
     "dev": {
       "cache": false,
@@ -24,6 +30,14 @@
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
     },
     "test:integration": {
       "dependsOn": ["^build"],

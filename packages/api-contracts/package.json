@@ -12,6 +12,7 @@
     "zod": "^3"
   },
   "devDependencies": {
+    "@simpleinvoice/config": "workspace:*",
     "typescript": "^5"
   }
 }

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint · Type-check · Test · Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type-check
+        run: pnpm type-check
+
+      - name: Test (unit)
+        run: pnpm --filter @simpleinvoice/web test
+
+      - name: Test (integration)
+        run: pnpm --filter @simpleinvoice/web test:integration
+
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          # Placeholder values — real secrets live in Vercel project env vars.
+          # env.server.ts validates these at module-load time during next build.
+          DIGITAL_CLIENT_ID: ci-placeholder
+          DIGITAL_CLIENT_SECRET: ci-placeholder
+          DIGITAL_BASE_URL: https://sandbox.101digital.io

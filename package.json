@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.2",
   "scripts": {
+    "prepare": "husky",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
@@ -15,6 +16,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\" --ignore-path .gitignore"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@commitlint/types": "^21.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
     "prettier": "^3",
     "turbo": "^2"
   }
