@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ListInvoicesQuerySchema } from "@simpleinvoice/api-contracts";
-import { InvoiceFetchError } from "@simpleinvoice/domain";
+import {
+  ListInvoicesQuerySchema,
+  CreateInvoiceRequestSchema,
+} from "@simpleinvoice/api-contracts";
+import { InvoiceFetchError, InvoiceCreateError } from "@simpleinvoice/domain";
 import { InvoiceAdapter } from "@/infrastructure/101digital/InvoiceAdapter";
 import { SessionCookieStore } from "@/infrastructure/storage/SessionCookieStore";
 
@@ -48,4 +51,47 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(result.value);
+}
+
+export async function POST(request: NextRequest) {
+  const session = await cookieStore.get();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const parsed = CreateInvoiceRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        error: "Validation failed",
+        details: parsed.error.flatten().fieldErrors,
+      },
+      { status: 400 },
+    );
+  }
+
+  const adapter = new InvoiceAdapter(session.accessToken, session.orgToken);
+  const result = await adapter.create(parsed.data);
+
+  if (!result.ok) {
+    if (result.error instanceof InvoiceCreateError) {
+      return NextResponse.json(
+        { error: "Failed to create invoice" },
+        { status: 502 },
+      );
+    }
+    return NextResponse.json(
+      { error: "Invoice service unavailable" },
+      { status: 503 },
+    );
+  }
+
+  return NextResponse.json(result.value, { status: 201 });
 }
