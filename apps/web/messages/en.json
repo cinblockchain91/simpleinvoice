@@ -33,6 +33,7 @@
   },
   "invoices": {
     "title": "Invoices",
+    "createInvoice": "Create Invoice",
     "empty": "No invoices found",
     "columns": {
       "invoiceNumber": "Invoice #",

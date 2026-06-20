@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { PlusIcon } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Button } from "@/shadcn/ui/button";
 import { InvoiceTable } from "@/widgets/invoice-table";
 import { FilterBar } from "@/widgets/invoice-filters";
 import { SortControls } from "@/widgets/invoice-filters";
@@ -48,6 +51,12 @@ export default function InvoicesPage() {
     <div className="container mx-auto px-4 py-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
+        <Button asChild>
+          <Link href="/invoices/new">
+            <PlusIcon className="mr-2 h-4 w-4" />
+            {t("createInvoice")}
+          </Link>
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
