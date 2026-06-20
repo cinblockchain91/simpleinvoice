@@ -1,4 +1,5 @@
-import { ThemeToggle, LanguageSwitcher } from "@/shared/ui";
+import { ThemeToggle } from "@/shared/ui";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   return (
