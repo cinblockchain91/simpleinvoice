@@ -84,7 +84,8 @@
     },
     "submit": "Create Invoice",
     "submitLoading": "Creating...",
-    "successMessage": "Invoice created successfully"
+    "successMessage": "Invoice created successfully",
+    "errorMessage": "Failed to create invoice. Please try again."
   },
   "metadata": {
     "title": "SimpleInvoice",
