@@ -1,0 +1,14 @@
+{
+  "name": "@simpleinvoice/domain",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure business logic — zero React/Next.js dependencies",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

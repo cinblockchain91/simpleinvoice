@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@simpleinvoice/domain": ["../../packages/domain/src/index.ts"],
+      "@simpleinvoice/api-contracts": ["../../packages/api-contracts/src/index.ts"]
     }
   },
   "include": [
