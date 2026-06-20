@@ -84,7 +84,8 @@
     },
     "submit": "Tạo hóa đơn",
     "submitLoading": "Đang tạo...",
-    "successMessage": "Tạo hóa đơn thành công"
+    "successMessage": "Tạo hóa đơn thành công",
+    "errorMessage": "Tạo hóa đơn thất bại. Vui lòng thử lại."
   },
   "metadata": {
     "title": "SimpleInvoice",
