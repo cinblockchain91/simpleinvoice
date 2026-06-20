@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Lint · Type-check · Build
+    name: Lint · Type-check · Test · Build
     runs-on: ubuntu-latest
 
     steps:
@@ -32,8 +32,18 @@ jobs:
       - name: Type-check
         run: pnpm type-check
 
+      - name: Test (unit)
+        run: pnpm --filter @simpleinvoice/web test
+
+      - name: Test (integration)
+        run: pnpm --filter @simpleinvoice/web test:integration
+
       - name: Build
         run: pnpm build
         env:
-          # Suppress Next.js telemetry in CI
           NEXT_TELEMETRY_DISABLED: 1
+          # Placeholder values — real secrets live in Vercel project env vars.
+          # env.server.ts validates these at module-load time during next build.
+          DIGITAL_CLIENT_ID: ci-placeholder
+          DIGITAL_CLIENT_SECRET: ci-placeholder
+          DIGITAL_BASE_URL: https://sandbox.101digital.io
