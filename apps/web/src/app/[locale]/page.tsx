@@ -17,8 +17,8 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("common");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 flex-col items-center justify-center">
       <h1 className="text-2xl font-semibold">{t("appName")}</h1>
-    </main>
+    </div>
   );
 }
