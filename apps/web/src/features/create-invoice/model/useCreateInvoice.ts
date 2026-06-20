@@ -2,7 +2,8 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bffFetch, BffError } from "@/shared/api/bff-client";
-import type { CreateInvoiceRequest, Invoice } from "@/entities/invoice";
+import type { CreateInvoiceRequest } from "@simpleinvoice/api-contracts";
+import type { Invoice } from "@/entities/invoice";
 
 export function useCreateInvoice() {
   const queryClient = useQueryClient();
