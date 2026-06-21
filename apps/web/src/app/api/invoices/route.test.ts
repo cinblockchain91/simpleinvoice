@@ -18,6 +18,12 @@ const { mockCookieGet, mockAdapterList, mockAdapterCreate } = vi.hoisted(
 
 vi.mock("server-only", () => ({}));
 
+vi.mock("next/cache", () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  unstable_cache: (fn: any) => fn,
+  revalidateTag: vi.fn(),
+}));
+
 vi.mock("@/infrastructure/storage/SessionCookieStore", () => {
   const SessionCookieStore = vi.fn();
   SessionCookieStore.prototype.get = mockCookieGet;
