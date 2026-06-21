@@ -9,11 +9,19 @@ export default defineConfig({
     name: "integration",
     environment: "node",
     globals: true,
-    setupFiles: ["./src/__tests__/setup.ts"],
+    setupFiles: ["./src/__tests__/setup.integration.ts"],
     include: ["src/**/*.integration.{test,spec}.{ts,tsx}"],
     exclude: ["node_modules", ".next"],
     testTimeout: 15_000,
     hookTimeout: 10_000,
+    // These must match the constants in src/__tests__/msw/handlers.ts
+    env: {
+      DIGITAL_AUTH_BASE_URL: "https://auth.101digital.test",
+      DIGITAL_API_BASE_URL: "https://api.101digital.test",
+      DIGITAL_CLIENT_ID: "test-client-id",
+      DIGITAL_CLIENT_SECRET: "test-client-secret",
+      NODE_ENV: "test",
+    },
   },
   resolve: {
     alias: {
