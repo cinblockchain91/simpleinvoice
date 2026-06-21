@@ -33,7 +33,7 @@ const FSD_ELEMENTS = [
  */
 const FSD_ELEMENT_RULES = [
   { from: "shadcn", allow: [] },
-  { from: "shared", allow: ["shadcn"] },
+  { from: "shared", allow: ["shadcn", "shared", "i18n"] },
   // i18n depends on nothing in the app layers
   { from: "i18n", allow: [] },
   { from: "entities", allow: ["shared", "shadcn"] },
