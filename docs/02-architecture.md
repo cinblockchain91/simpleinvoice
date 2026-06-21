@@ -19,6 +19,29 @@ domain ← application ← infrastructure ← presentation
 
 Outer layers import from inner layers. The reverse is enforced by `eslint-plugin-boundaries` — a failing lint check is a dependency violation, caught in CI before it reaches review.
 
+### Why the `entities/` layer exists
+
+`entities/` sits between `shared/` (no business knowledge) and `features/` (user actions). It answers the question **"what does this domain object look like?"** without answering **"what can the user do with it?"**
+
+| Layer       | Knows about business? | Knows about user actions? | Example                                 |
+| ----------- | --------------------- | ------------------------- | --------------------------------------- |
+| `shared/`   | No                    | No                        | `DatePicker`, `format-currency`         |
+| `entities/` | Yes — passive         | No                        | `InvoiceStatusBadge`, invoice types     |
+| `features/` | Yes                   | Yes                       | `useCreateInvoice`, `CreateInvoiceForm` |
+| `widgets/`  | Composes both         | No direct logic           | `InvoiceTable`, `AppSidebar`            |
+
+**Concrete example — `InvoiceStatusBadge`:**
+
+```
+❌ shared/ui/        → shared cannot have business semantics (PENDING, APPROVED are domain concepts)
+❌ features/list-invoices/  → features/create-invoice and features/view-invoice also need it
+                              (cross-feature import is forbidden)
+❌ widgets/          → badge is an atom; widgets are large composed blocks
+✅ entities/invoice/ → knows what an invoice status looks like, nothing more
+```
+
+`entities/invoice/model/` also acts as the single import gateway for domain types and API schemas — every feature imports `Invoice`, `InvoiceStatus`, and Zod schemas from `entities/invoice` rather than reaching directly into `@simpleinvoice/domain` or `@simpleinvoice/api-contracts`. This keeps package coupling centralised and refactorable in one place.
+
 ## Monorepo Structure
 
 ```
