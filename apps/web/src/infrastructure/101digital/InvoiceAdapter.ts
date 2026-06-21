@@ -43,15 +43,8 @@ const ApiInvoiceSchema = z
 const ApiListResponseSchema = z
   .object({
     data: z.array(ApiInvoiceSchema),
-    metadata: z
-      .object({
-        total: z.number().optional(),
-        currentPage: z.number().optional(),
-        pageSize: z.number().optional(),
-      })
-      .optional(),
+    paging: z.record(z.unknown()).optional(),
     total: z.number().optional(),
-    currentPage: z.number().optional(),
   })
   .passthrough();
 
@@ -69,6 +62,15 @@ const STATUS_MAP: Record<string, InvoiceStatus> = {
   Cancelled: "VOID",
 };
 
+// Domain → API filter value (101Digital accepted values: Due,Overdue,Paid,Cancelled,Rejected)
+const DOMAIN_TO_API_STATUS: Record<InvoiceStatus, string> = {
+  DRAFT: "Draft",
+  PENDING: "Due",
+  APPROVED: "Paid",
+  REJECTED: "Rejected",
+  VOID: "Cancelled",
+};
+
 function mapStatus(
   status: Array<{ key: string; value: boolean }>,
 ): InvoiceStatus {
@@ -77,7 +79,16 @@ function mapStatus(
 }
 
 function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
-  const customer = api.customer as { id: string; name?: string } | undefined;
+  const customer = api.customer as
+    | { id: string; name?: string; firstName?: string; lastName?: string }
+    | undefined;
+
+  const fullName = [customer?.firstName, customer?.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const customerName = customer?.name ?? (fullName || (customer?.id ?? ""));
+
   return {
     id: api.invoiceId,
     invoiceNumber: api.invoiceNumber,
@@ -89,7 +100,7 @@ function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
     issueDate: api.invoiceDate,
     dueDate: api.dueDate,
     customerId: customer?.id ?? "",
-    customerName: customer?.name ?? customer?.id ?? "",
+    customerName,
     items: [],
     createdDate: api.createdAt ?? api.invoiceDate,
     modifiedDate: api.createdAt ?? api.invoiceDate,
@@ -113,7 +124,7 @@ export class InvoiceAdapter implements InvoiceRepository {
         pageSize: String(params.pageSize),
       });
       if (params.status) {
-        query.set("statuses", params.status);
+        query.set("status", DOMAIN_TO_API_STATUS[params.status]);
       }
       if (params.keyword) query.set("keyword", params.keyword);
 
@@ -148,8 +159,23 @@ export class InvoiceAdapter implements InvoiceRepository {
       }
 
       const invoices = parsed.data.data.map(mapApiInvoice);
-      const total =
-        parsed.data.total ?? parsed.data.metadata?.total ?? invoices.length;
+      const paging = parsed.data.paging ?? {};
+      const TOTAL_KEYS = [
+        "total",
+        "totalRecord",
+        "totalRecords",
+        "totalCount",
+        "count",
+        "recordCount",
+        "Total",
+        "TotalRecord",
+      ];
+      const pagingTotal = TOTAL_KEYS.reduce<number | undefined>((found, k) => {
+        if (found !== undefined) return found;
+        const v = paging[k];
+        return typeof v === "number" && !Number.isNaN(v) ? v : undefined;
+      }, undefined);
+      const total = parsed.data.total ?? pagingTotal ?? invoices.length;
 
       return ok({
         data: invoices as readonly Invoice[],
@@ -207,6 +233,11 @@ export class InvoiceAdapter implements InvoiceRepository {
             customer: {
               firstName: data.customerName,
               lastName: "",
+              contact: {
+                email: data.customerEmail,
+                mobileNumber: "",
+              },
+              addresses: [],
             },
             items: data.items.map((item, i) => ({
               itemReference: `item-${i + 1}`,

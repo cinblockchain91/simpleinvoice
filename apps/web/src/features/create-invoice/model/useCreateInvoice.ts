@@ -18,7 +18,7 @@ export function useCreateInvoice() {
         body: JSON.stringify(data),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      queryClient.removeQueries({ queryKey: ["invoices"] });
       toast.success(t("successMessage"));
     },
     onError: () => {

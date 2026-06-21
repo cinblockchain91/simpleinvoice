@@ -63,6 +63,7 @@
       "dueDate": "Ngày đến hạn",
       "dueDatePlaceholder": "Chọn ngày đến hạn",
       "customerName": "Tên khách hàng",
+      "customerEmail": "Email khách hàng",
       "customerId": "Mã khách hàng"
     },
     "lineItems": {

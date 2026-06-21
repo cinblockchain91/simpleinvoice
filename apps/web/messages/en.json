@@ -63,6 +63,7 @@
       "dueDate": "Due Date",
       "dueDatePlaceholder": "Pick due date",
       "customerName": "Customer Name",
+      "customerEmail": "Customer Email",
       "customerId": "Customer ID"
     },
     "lineItems": {

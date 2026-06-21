@@ -65,6 +65,7 @@ const VALID_CREATE_BODY = {
   dueDate: "2026-07-21",
   customerId: "cust-123",
   customerName: "Acme Corp",
+  customerEmail: "acme@example.com",
   items: [
     { description: "Consulting", quantity: 1, unitPrice: 1000, taxRate: 10 },
   ],

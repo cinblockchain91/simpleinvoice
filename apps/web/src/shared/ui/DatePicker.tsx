@@ -14,6 +14,7 @@ interface DatePickerProps {
   onChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  minDate?: string; // YYYY-MM-DD — dates before this are disabled
   className?: string;
 }
 
@@ -23,6 +24,7 @@ export function DatePicker({
   onChange,
   placeholder = "Pick a date",
   disabled = false,
+  minDate,
   className,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
@@ -32,6 +34,12 @@ export function DatePicker({
     const d = parse(value, "yyyy-MM-dd", new Date());
     return isValid(d) ? d : undefined;
   }, [value]);
+
+  const disabledDays = React.useMemo(() => {
+    if (!minDate) return undefined;
+    const min = parse(minDate, "yyyy-MM-dd", new Date());
+    return isValid(min) ? { before: min } : undefined;
+  }, [minDate]);
 
   function handleSelect(day: Date | undefined) {
     onChange?.(day ? format(day, "yyyy-MM-dd") : "");
@@ -63,6 +71,7 @@ export function DatePicker({
           mode="single"
           selected={selected}
           onSelect={handleSelect}
+          disabled={disabledDays}
           autoFocus
         />
       </PopoverContent>

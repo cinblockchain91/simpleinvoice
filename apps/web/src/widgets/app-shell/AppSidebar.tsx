@@ -21,26 +21,26 @@ const navItems = [
   },
 ];
 
-interface AppSidebarProps {
-  collapsed: boolean;
+interface SidebarContentProps {
+  collapsed?: boolean;
+  onNavigate?: () => void;
 }
 
-export function AppSidebar({ collapsed }: AppSidebarProps) {
+export function SidebarContent({
+  collapsed = false,
+  onNavigate,
+}: SidebarContentProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const { logout } = useLogout();
 
   return (
-    <aside
-      className={cn(
-        "flex shrink-0 flex-col border-r bg-sidebar h-svh sticky top-0 overflow-hidden transition-[width] duration-200 ease-linear",
-        collapsed ? "w-12" : "w-[200px]",
-      )}
-    >
+    <>
       {/* Logo */}
       <div className="flex h-14 items-center border-b px-3">
         <Link
           href="/invoices"
+          onClick={onNavigate}
           className={cn(
             "flex items-center gap-2",
             collapsed && "justify-center",
@@ -70,6 +70,7 @@ export function AppSidebar({ collapsed }: AppSidebarProps) {
             <Link
               key={href}
               href={href}
+              onClick={onNavigate}
               title={collapsed ? t(labelKey) : undefined}
               className={cn(
                 "flex items-center rounded-md py-1.5 text-sm transition-colors",
@@ -89,7 +90,10 @@ export function AppSidebar({ collapsed }: AppSidebarProps) {
       {/* Footer */}
       <div className="border-t p-2">
         <button
-          onClick={logout}
+          onClick={() => {
+            logout();
+            onNavigate?.();
+          }}
           title={collapsed ? t("auth.logout") : undefined}
           className={cn(
             "flex w-full items-center rounded-md py-1.5 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -100,6 +104,23 @@ export function AppSidebar({ collapsed }: AppSidebarProps) {
           {!collapsed && <span>{t("auth.logout")}</span>}
         </button>
       </div>
+    </>
+  );
+}
+
+interface AppSidebarProps {
+  collapsed: boolean;
+}
+
+export function AppSidebar({ collapsed }: AppSidebarProps) {
+  return (
+    <aside
+      className={cn(
+        "flex shrink-0 flex-col border-r bg-sidebar h-svh sticky top-0 overflow-hidden transition-[width] duration-200 ease-linear",
+        collapsed ? "w-12" : "w-[200px]",
+      )}
+    >
+      <SidebarContent collapsed={collapsed} />
     </aside>
   );
 }
