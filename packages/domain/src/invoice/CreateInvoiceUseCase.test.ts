@@ -19,6 +19,7 @@ const DATA: CreateInvoiceData = {
   issueDate: "2026-06-21",
   dueDate: "2026-07-21",
   customerName: "Acme Corp",
+  customerEmail: "acme@example.com",
   items: [
     { description: "Consulting", quantity: 2, unitPrice: 500, taxRate: 10 },
   ],
