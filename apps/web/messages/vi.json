@@ -88,6 +88,9 @@
     "successMessage": "Tạo hóa đơn thành công",
     "errorMessage": "Tạo hóa đơn thất bại. Vui lòng thử lại."
   },
+  "nav": {
+    "platform": "Điều hướng"
+  },
   "metadata": {
     "title": "SimpleInvoice",
     "description": "Quản lý hóa đơn chuyên nghiệp"

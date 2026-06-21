@@ -88,6 +88,9 @@
     "successMessage": "Invoice created successfully",
     "errorMessage": "Failed to create invoice. Please try again."
   },
+  "nav": {
+    "platform": "Platform"
+  },
   "metadata": {
     "title": "SimpleInvoice",
     "description": "Professional invoicing made simple"
