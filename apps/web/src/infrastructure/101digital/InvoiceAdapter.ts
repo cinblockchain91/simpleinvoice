@@ -120,8 +120,11 @@ export class InvoiceAdapter implements InvoiceRepository {
         pageNum: String(params.page),
         pageSize: String(params.pageSize),
       });
-      if (params.status)
-        query.set("statuses", DOMAIN_TO_API_STATUSES[params.status]);
+      if (params.status) {
+        const apiStatuses =
+          DOMAIN_TO_API_STATUSES[params.status as InvoiceStatus];
+        if (apiStatuses) query.set("statuses", apiStatuses);
+      }
       if (params.keyword) query.set("keyword", params.keyword);
 
       const res = await fetch(
