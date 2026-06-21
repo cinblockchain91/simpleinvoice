@@ -60,6 +60,7 @@ const ApiListResponseSchema = z
 const STATUS_MAP: Record<string, InvoiceStatus> = {
   Draft: "DRAFT",
   Due: "PENDING",
+  Overdue: "PENDING",
   PartiallyPaid: "PENDING",
   Approved: "APPROVED",
   Paid: "APPROVED",
@@ -68,13 +69,14 @@ const STATUS_MAP: Record<string, InvoiceStatus> = {
   Cancelled: "VOID",
 };
 
-// Reverse map: domain status → 101Digital API status keys (comma-separated)
-const DOMAIN_TO_API_STATUSES: Record<InvoiceStatus, string> = {
-  DRAFT: "Draft",
-  PENDING: "Due,PartiallyPaid",
-  APPROVED: "Approved,Paid",
+// Reverse map: domain status → 101Digital API filter values.
+// Valid filter values per API docs: Due, Overdue, Paid, Cancelled, Rejected.
+// Draft/PartiallyPaid/Approved/Void are response-only keys — not accepted as filters.
+const DOMAIN_TO_API_STATUSES: Partial<Record<InvoiceStatus, string>> = {
+  PENDING: "Due,Overdue",
+  APPROVED: "Paid",
   REJECTED: "Rejected",
-  VOID: "Void,Cancelled",
+  VOID: "Cancelled",
 };
 
 function mapStatus(
