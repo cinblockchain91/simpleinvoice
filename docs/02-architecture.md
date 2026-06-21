@@ -54,9 +54,13 @@ simpleinvoice/
     │   └── src/
     │       ├── invoice/         # Invoice entity, repository port, use cases
     │       ├── auth/            # AuthToken value object, AuthPort, LoginUseCase
-    │       └── shared/          # Result<T,E> — replaces throw/catch at boundaries
+    │       └── shared/          # Result<T,E> + Pagination types
     │
     ├── api-contracts/           # Zod schemas + shared types (used by both BFF and client)
+    │   └── src/
+    │       ├── auth/            # LoginRequest schema
+    │       ├── invoice/         # InvoiceResponse, CreateInvoiceRequest, ListInvoicesResponse
+    │       └── user/            # UserProfile schema
     └── config/                  # Shared tsconfig, eslint base
 ```
 
@@ -124,9 +128,12 @@ simpleinvoice/
 │   │           └── Result.ts            # Result<T, E> — no throw/catch at boundaries
 │   │
 │   └── api-contracts/                   # ← Shared by web BFF + mobile API client
-│       └── src/invoice/
-│           ├── invoice.schema.ts        # Zod schema (validates API responses)
-│           └── create-invoice.schema.ts # Zod schema (validates user input)
+│       └── src/
+│           ├── auth/login.schema.ts
+│           ├── invoice/invoice.schema.ts        # Zod schema (validates API responses)
+│           ├── invoice/create-invoice.schema.ts # Zod schema (validates user input)
+│           ├── invoice/list-invoices.schema.ts  # Paginated list response schema
+│           └── user/profile.schema.ts
 │
 ├── apps/
 │   ├── web/                             # Next.js 16
