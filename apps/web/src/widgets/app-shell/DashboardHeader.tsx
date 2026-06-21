@@ -2,6 +2,7 @@
 
 import { PanelLeft } from "lucide-react";
 import { usePathname, Link } from "@/i18n/navigation";
+import { cn } from "@/shadcn/lib/utils";
 import { Separator } from "@/shadcn/ui/separator";
 import { Button } from "@/shadcn/ui/button";
 import {
@@ -42,13 +43,19 @@ function usePageBreadcrumb() {
 
 interface DashboardHeaderProps {
   onToggle: () => void;
+  collapsed: boolean;
 }
 
-export function DashboardHeader({ onToggle }: DashboardHeaderProps) {
+export function DashboardHeader({ onToggle, collapsed }: DashboardHeaderProps) {
   const { parent, current } = usePageBreadcrumb();
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
+    <header
+      className={cn(
+        "fixed right-0 top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4 transition-[left] duration-200 ease-linear",
+        collapsed ? "left-12" : "left-[200px]",
+      )}
+    >
       <Button
         variant="ghost"
         size="icon"
