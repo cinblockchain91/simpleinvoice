@@ -69,7 +69,7 @@ export function InvoiceListContent() {
             isLoading={isLoading || isPending || isFetching}
             onRowClick={(id) => router.push(`/invoices/${id}`)}
           />
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
             <span>{t("pagination.totalCount", { total })}</span>
             <InvoicePagination
               page={page}

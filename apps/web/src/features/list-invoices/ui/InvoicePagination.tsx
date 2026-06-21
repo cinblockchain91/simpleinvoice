@@ -43,7 +43,7 @@ export function InvoicePagination({
             }}
           >
             <ChevronLeft className="h-4 w-4" />
-            <span>{t("previous")}</span>
+            <span className="hidden sm:inline">{t("previous")}</span>
           </PaginationLink>
         </PaginationItem>
 
@@ -80,7 +80,7 @@ export function InvoicePagination({
               if (page < totalPages) onPageChange(page + 1);
             }}
           >
-            <span>{t("next")}</span>
+            <span className="hidden sm:inline">{t("next")}</span>
             <ChevronRight className="h-4 w-4" />
           </PaginationLink>
         </PaginationItem>
