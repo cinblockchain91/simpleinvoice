@@ -12,6 +12,8 @@ import {
   BreadcrumbSeparator,
 } from "@/shadcn/ui/breadcrumb";
 import { Link } from "@/i18n/navigation";
+import { ThemeToggle } from "@/shared/ui";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 function usePageBreadcrumb() {
   const pathname = usePathname();
@@ -65,6 +67,10 @@ export function DashboardHeader() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="ml-auto flex items-center gap-1">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

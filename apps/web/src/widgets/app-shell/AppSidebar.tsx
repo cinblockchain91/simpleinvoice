@@ -3,9 +3,7 @@
 import { FileText, PlusCircle, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { ThemeToggle } from "@/shared/ui";
 import { useLogout } from "@/features/auth";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import {
   Sidebar,
   SidebarContent,
@@ -86,20 +84,14 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarSeparator />
-        <div className="flex items-center justify-between px-2 py-2">
-          <div className="flex items-center gap-1">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
-          <SidebarMenu className="w-auto">
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={t("auth.logout")} onClick={logout}>
-                <LogOut />
-                <span>{t("auth.logout")}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip={t("auth.logout")} onClick={logout}>
+              <LogOut />
+              <span>{t("auth.logout")}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
