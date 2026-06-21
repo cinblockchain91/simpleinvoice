@@ -6,8 +6,8 @@
 > A production-grade invoicing web application built on Next.js 16, React 19, and TypeScript 5.
 
 **Live demo:** https://simpleinvoice-web.vercel.app  
-Username: 94756921275
-Password: Password@12345
+**Username:** 94756921275  
+**Password:** Password@12345
 
 ---
 
