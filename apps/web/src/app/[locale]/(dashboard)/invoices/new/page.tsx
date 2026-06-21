@@ -15,7 +15,7 @@ export default function NewInvoicePage() {
     <div className="container max-w-[800px] px-8 py-8 space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/invoices">
+          <Link href="/invoices" aria-label="Back to invoices">
             <ArrowLeftIcon className="h-4 w-4" />
           </Link>
         </Button>
