@@ -50,7 +50,7 @@ const MOCK_SESSION_COOKIES = [
 // ── Route mock helpers ────────────────────────────────────────────────────────
 
 async function mockInvoiceRoutes(page: Page) {
-  await page.route("**/api/invoices", async (route) => {
+  await page.route("**/api/invoices**", async (route) => {
     if (route.request().method() === "GET") {
       await route.fulfill({
         status: 200,
