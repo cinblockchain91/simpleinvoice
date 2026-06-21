@@ -68,11 +68,20 @@ const STATUS_MAP: Record<string, InvoiceStatus> = {
   Cancelled: "VOID",
 };
 
+// Reverse map: domain status → 101Digital API status keys (comma-separated)
+const DOMAIN_TO_API_STATUSES: Record<InvoiceStatus, string> = {
+  DRAFT: "Draft",
+  PENDING: "Due,PartiallyPaid",
+  APPROVED: "Approved,Paid",
+  REJECTED: "Rejected",
+  VOID: "Void,Cancelled",
+};
+
 function mapStatus(
   status: Array<{ key: string; value: boolean }>,
 ): InvoiceStatus {
   const active = status.find((s) => s.value)?.key ?? "";
-  return STATUS_MAP[active] ?? "PENDING";
+  return STATUS_MAP[active] ?? "DRAFT";
 }
 
 function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
@@ -111,7 +120,8 @@ export class InvoiceAdapter implements InvoiceRepository {
         pageNum: String(params.page),
         pageSize: String(params.pageSize),
       });
-      if (params.status) query.set("statuses", params.status);
+      if (params.status)
+        query.set("statuses", DOMAIN_TO_API_STATUSES[params.status]);
       if (params.keyword) query.set("keyword", params.keyword);
 
       const res = await fetch(
