@@ -24,60 +24,28 @@ describe("CreateInvoiceForm", () => {
     expect(screen.getByLabelText("fields.issueDate")).toBeInTheDocument();
     expect(screen.getByLabelText("fields.dueDate")).toBeInTheDocument();
     expect(screen.getByLabelText("fields.customerName")).toBeInTheDocument();
-    expect(screen.getByLabelText("fields.customerId")).toBeInTheDocument();
   });
 
-  it("starts with one line item row", () => {
+  it("renders one static line item with all required fields", () => {
     setup();
-    const removeButtons = screen.getAllByRole("button", {
-      name: "lineItems.removeItem",
-    });
-    expect(removeButtons).toHaveLength(1);
+    expect(
+      screen.getByPlaceholderText("lineItems.description"),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("spinbutton")).toHaveLength(3); // quantity, unitPrice, taxRate
   });
 
-  it("remove button is disabled when only one line item", () => {
+  it("does not show Add Item or Remove Item buttons", () => {
     setup();
-    const removeBtn = screen.getByRole("button", {
-      name: "lineItems.removeItem",
-    });
-    expect(removeBtn).toBeDisabled();
-  });
-
-  it("adds a new line item row when Add Item is clicked", async () => {
-    const { user } = setup();
-    await user.click(screen.getByRole("button", { name: "lineItems.addItem" }));
-    const removeButtons = screen.getAllByRole("button", {
-      name: "lineItems.removeItem",
-    });
-    expect(removeButtons).toHaveLength(2);
-  });
-
-  it("enables the remove button when multiple line items exist", async () => {
-    const { user } = setup();
-    await user.click(screen.getByRole("button", { name: "lineItems.addItem" }));
-    const removeButtons = screen.getAllByRole("button", {
-      name: "lineItems.removeItem",
-    });
-    removeButtons.forEach((btn) => expect(btn).not.toBeDisabled());
-  });
-
-  it("removes a line item row when remove is clicked", async () => {
-    const { user } = setup();
-    await user.click(screen.getByRole("button", { name: "lineItems.addItem" }));
     expect(
-      screen.getAllByRole("button", { name: "lineItems.removeItem" }),
-    ).toHaveLength(2);
-    await user.click(
-      screen.getAllByRole("button", { name: "lineItems.removeItem" })[0],
-    );
+      screen.queryByRole("button", { name: "lineItems.addItem" }),
+    ).not.toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "lineItems.removeItem" }),
-    ).toHaveLength(1);
+      screen.queryByRole("button", { name: "lineItems.removeItem" }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows validation errors when form is submitted empty", async () => {
     const { user } = setup();
-    // Clear the default currency value so currency validation also fires
     await user.clear(screen.getByLabelText("fields.currency"));
     await user.click(screen.getByRole("button", { name: "submit" }));
     await waitFor(() => {

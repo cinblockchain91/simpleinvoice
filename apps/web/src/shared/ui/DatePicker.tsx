@@ -9,6 +9,7 @@ import { Calendar } from "@/shadcn/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 
 interface DatePickerProps {
+  id?: string;
   value?: string; // YYYY-MM-DD
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -17,6 +18,7 @@ interface DatePickerProps {
 }
 
 export function DatePicker({
+  id,
   value,
   onChange,
   placeholder = "Pick a date",
@@ -40,6 +42,7 @@ export function DatePicker({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id={id}
           variant="outline"
           disabled={disabled}
           className={cn(
