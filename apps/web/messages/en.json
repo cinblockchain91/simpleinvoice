@@ -34,7 +34,7 @@
   "invoices": {
     "title": "Invoices",
     "createInvoice": "Create Invoice",
-    "detail": "Invoice Detail",
+    "detailTitle": "Invoice Detail",
     "empty": "No invoices found",
     "columns": {
       "invoiceNumber": "Invoice #",

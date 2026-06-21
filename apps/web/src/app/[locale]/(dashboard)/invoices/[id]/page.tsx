@@ -32,7 +32,7 @@ export default async function InvoiceDetailPage({
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className="text-2xl font-semibold">{t("detail")}</h1>
+        <h1 className="text-2xl font-semibold">{t("detailTitle")}</h1>
       </div>
 
       <Suspense fallback={<InvoiceDetailFallback />}>

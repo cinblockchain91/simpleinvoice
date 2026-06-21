@@ -34,7 +34,7 @@
   "invoices": {
     "title": "Hóa đơn",
     "createInvoice": "Tạo hóa đơn",
-    "detail": "Chi tiết hóa đơn",
+    "detailTitle": "Chi tiết hóa đơn",
     "empty": "Không tìm thấy hóa đơn nào",
     "columns": {
       "invoiceNumber": "Số hóa đơn",
