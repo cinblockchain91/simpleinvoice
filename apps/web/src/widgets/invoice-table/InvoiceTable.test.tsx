@@ -39,11 +39,6 @@ describe("InvoiceTable", () => {
   it("shows skeleton rows when isLoading=true", () => {
     render(<InvoiceTable invoices={[]} isLoading />);
     expect(screen.queryByText("No invoices found.")).not.toBeInTheDocument();
-    // 5 skeleton rows × 6 columns = 30 skeleton cells
-    const skeletons = document.querySelectorAll(
-      '[class*="skeleton"], [data-testid="skeleton"]',
-    );
-    // Just verify no empty state is shown and skeletons are rendered
     const rows = screen.getAllByRole("row");
     // 1 header row + 5 skeleton rows
     expect(rows.length).toBe(6);

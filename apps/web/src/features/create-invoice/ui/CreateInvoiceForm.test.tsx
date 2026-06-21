@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect } from "vitest";
 import { CreateInvoiceForm } from "./CreateInvoiceForm";
@@ -14,13 +14,6 @@ function setup(
   const user = userEvent.setup();
   render(<CreateInvoiceForm onSubmit={onSubmit} {...props} />);
   return { onSubmit, user };
-}
-
-// Helpers for querying line item rows (each row has a remove button)
-function getLineItemRows() {
-  return screen
-    .getAllByRole("button", { name: "lineItems.removeItem" })
-    .map((btn) => btn.closest("div[class]")!);
 }
 
 describe("CreateInvoiceForm", () => {

@@ -43,7 +43,9 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
           # Placeholder values — real secrets live in Vercel project env vars.
-          # env.server.ts validates these at module-load time during next build.
+          # env.server.ts uses a lazy Proxy: validation only runs when a property
+          # is first accessed at runtime, never during next build itself.
           DIGITAL_CLIENT_ID: ci-placeholder
           DIGITAL_CLIENT_SECRET: ci-placeholder
-          DIGITAL_BASE_URL: https://sandbox.101digital.io
+          DIGITAL_AUTH_BASE_URL: https://is-wso2-dev.101digital.io
+          DIGITAL_API_BASE_URL: https://api-neobank-dev.101digital.io
