@@ -18,7 +18,6 @@ const DATA: CreateInvoiceData = {
   currency: "USD",
   issueDate: "2026-06-21",
   dueDate: "2026-07-21",
-  customerId: "cust-123",
   customerName: "Acme Corp",
   items: [
     { description: "Consulting", quantity: 2, unitPrice: 500, taxRate: 10 },
