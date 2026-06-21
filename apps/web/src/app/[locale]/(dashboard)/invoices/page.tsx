@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/shadcn/ui/button";
 import { InvoiceTable } from "@/widgets/invoice-table";
 import { FilterBar } from "@/widgets/invoice-filters";
@@ -20,6 +20,7 @@ import type { InvoiceStatus } from "@/entities/invoice";
 
 export default function InvoicesPage() {
   const t = useTranslations("invoices");
+  const router = useRouter();
 
   const [status, setStatus] = useState<InvoiceStatus | "ALL">("ALL");
   const [sortBy, setSortBy] = useState<SortField>("issueDate");
@@ -76,7 +77,11 @@ export default function InvoicesPage() {
         </div>
       ) : (
         <>
-          <InvoiceTable invoices={sorted} isLoading={isLoading} />
+          <InvoiceTable
+            invoices={sorted}
+            isLoading={isLoading}
+            onRowClick={(id) => router.push(`/invoices/${id}`)}
+          />
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>
               {total} invoice{total !== 1 ? "s" : ""} total
