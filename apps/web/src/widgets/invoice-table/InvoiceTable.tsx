@@ -11,7 +11,6 @@ import {
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import { InvoiceStatusBadge } from "@/entities/invoice";
 import type { Invoice } from "@/entities/invoice";
-import { useRouter } from "@/i18n/navigation";
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -45,8 +44,6 @@ export function InvoiceTable({
   invoices,
   isLoading = false,
 }: InvoiceTableProps) {
-  const router = useRouter();
-
   return (
     <div className="rounded-md border">
       <Table>
@@ -79,11 +76,7 @@ export function InvoiceTable({
             </TableRow>
           ) : (
             invoices.map((invoice) => (
-              <TableRow
-                key={invoice.id}
-                className="cursor-pointer"
-                onClick={() => router.push(`/invoices/${invoice.id}`)}
-              >
+              <TableRow key={invoice.id}>
                 <TableCell className="font-medium">
                   {invoice.invoiceNumber}
                 </TableCell>

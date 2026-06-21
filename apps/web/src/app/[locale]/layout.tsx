@@ -5,6 +5,7 @@ import { QueryProvider } from "@/shared/ui";
 import { Toaster } from "@/shadcn/ui/sonner";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
+import { Header } from "@/widgets/app-shell";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -29,7 +30,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider messages={messages}>
       <QueryProvider>
-        {children}
+        <Header />
+        <main className="flex flex-1 flex-col">{children}</main>
         <Toaster position="bottom-right" richColors />
       </QueryProvider>
     </NextIntlClientProvider>
