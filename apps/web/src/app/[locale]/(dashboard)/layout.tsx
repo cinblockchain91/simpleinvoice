@@ -1,4 +1,3 @@
-import { SidebarProvider } from "@/shadcn/ui/sidebar";
 import { AppSidebar, DashboardHeader } from "@/widgets/app-shell";
 
 export default function DashboardLayout({
@@ -7,12 +6,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
+    <div className="flex min-h-svh">
       <AppSidebar />
-      <main className="flex flex-1 min-w-0 flex-col">
+      <main className="flex w-[calc(100%-200px)] flex-col">
         <DashboardHeader />
         <div className="flex flex-1 flex-col">{children}</div>
       </main>
-    </SidebarProvider>
+    </div>
   );
 }
