@@ -19,6 +19,7 @@ const MOCK_CREATE_DATA: CreateInvoiceData = {
   issueDate: "2024-01-15",
   dueDate: "2024-02-15",
   customerName: "Acme Corp",
+  customerEmail: "acme@example.com",
   items: [
     {
       description: "Consulting",
@@ -75,7 +76,7 @@ describe("InvoiceAdapter", () => {
       expect(capturedUrl!.searchParams.get("pageSize")).toBe("25");
     });
 
-    it("sends statuses filter when status is provided", async () => {
+    it("sends status filter when status is provided", async () => {
       let capturedUrl: URL | null = null;
 
       server.use(
@@ -89,9 +90,9 @@ describe("InvoiceAdapter", () => {
       );
 
       const adapter = new InvoiceAdapter(ACCESS_TOKEN, ORG_TOKEN);
-      await adapter.list({ page: 1, pageSize: 10, status: "DRAFT" });
+      await adapter.list({ page: 1, pageSize: 10, status: "PENDING" });
 
-      expect(capturedUrl!.searchParams.get("statuses")).toBe("DRAFT");
+      expect(capturedUrl!.searchParams.get("status")).toBe("Due");
     });
 
     it("returns InvoiceFetchError when API returns 500", async () => {

@@ -19,11 +19,21 @@ function setup(
 describe("CreateInvoiceForm", () => {
   it("renders all invoice header fields", () => {
     setup();
-    expect(screen.getByLabelText("fields.invoiceNumber")).toBeInTheDocument();
-    expect(screen.getByLabelText("fields.currency")).toBeInTheDocument();
-    expect(screen.getByLabelText("fields.issueDate")).toBeInTheDocument();
-    expect(screen.getByLabelText("fields.dueDate")).toBeInTheDocument();
-    expect(screen.getByLabelText("fields.customerName")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("fields.invoiceNumber", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("fields.currency", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("fields.issueDate", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("fields.dueDate", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("fields.customerName", { exact: false }),
+    ).toBeInTheDocument();
   });
 
   it("renders one static line item with all required fields", () => {
@@ -46,7 +56,9 @@ describe("CreateInvoiceForm", () => {
 
   it("shows validation errors when form is submitted empty", async () => {
     const { user } = setup();
-    await user.clear(screen.getByLabelText("fields.currency"));
+    await user.clear(
+      screen.getByLabelText("fields.currency", { exact: false }),
+    );
     await user.click(screen.getByRole("button", { name: "submit" }));
     await waitFor(() => {
       expect(
@@ -73,8 +85,12 @@ describe("CreateInvoiceForm", () => {
 
   it("disables inputs and buttons when isLoading=true", () => {
     setup({ isLoading: true });
-    expect(screen.getByLabelText("fields.invoiceNumber")).toBeDisabled();
-    expect(screen.getByLabelText("fields.currency")).toBeDisabled();
+    expect(
+      screen.getByLabelText("fields.invoiceNumber", { exact: false }),
+    ).toBeDisabled();
+    expect(
+      screen.getByLabelText("fields.currency", { exact: false }),
+    ).toBeDisabled();
     expect(
       screen.getByRole("button", { name: "submitLoading" }),
     ).toBeDisabled();

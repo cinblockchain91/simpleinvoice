@@ -23,6 +23,10 @@ export const CreateInvoiceRequestSchema = z
       .string()
       .regex(ISO_DATE, "Due date must be in YYYY-MM-DD format"),
     customerName: z.string().min(1, "Customer name is required"),
+    customerEmail: z
+      .string()
+      .email("Customer email must be a valid email address")
+      .min(1, "Customer email is required"),
     items: z
       .array(NewInvoiceItemSchema)
       .min(1, "At least one line item is required"),

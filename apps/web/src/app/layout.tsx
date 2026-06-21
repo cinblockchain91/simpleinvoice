@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getLocale } from "next-intl/server";
+import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/shared/ui";
 import "./globals.css";
 
@@ -39,6 +40,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NextTopLoader showSpinner={false} />
           {children}
         </ThemeProvider>
       </body>

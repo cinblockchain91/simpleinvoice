@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-day-picker/style.css" layer(rdp);
 
 /* Class-based dark mode — next-themes adds class="dark" to <html> */
 @custom-variant dark (&:is(.dark *));

@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import {
@@ -41,9 +41,12 @@ export function CreateInvoiceForm({
       issueDate: "",
       dueDate: "",
       customerName: "",
+      customerEmail: "",
       items: [{ description: "", quantity: 1, unitPrice: 0, taxRate: 0 }],
     },
   });
+
+  const issueDate = useWatch({ control: form.control, name: "issueDate" });
 
   return (
     <Form {...form}>
@@ -55,7 +58,10 @@ export function CreateInvoiceForm({
             name="invoiceNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("fields.invoiceNumber")}</FormLabel>
+                <FormLabel className="text-foreground">
+                  {t("fields.invoiceNumber")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="INV-001"
@@ -73,7 +79,10 @@ export function CreateInvoiceForm({
             name="currency"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("fields.currency")}</FormLabel>
+                <FormLabel className="text-foreground">
+                  {t("fields.currency")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="USD"
@@ -95,7 +104,10 @@ export function CreateInvoiceForm({
             name="issueDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("fields.issueDate")}</FormLabel>
+                <FormLabel className="text-foreground">
+                  {t("fields.issueDate")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <DatePicker
                     value={field.value}
@@ -114,13 +126,17 @@ export function CreateInvoiceForm({
             name="dueDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("fields.dueDate")}</FormLabel>
+                <FormLabel className="text-foreground">
+                  {t("fields.dueDate")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <DatePicker
                     value={field.value}
                     onChange={field.onChange}
                     placeholder={t("fields.dueDatePlaceholder")}
                     disabled={isLoading}
+                    minDate={issueDate || undefined}
                   />
                 </FormControl>
                 <FormMessage />
@@ -133,10 +149,35 @@ export function CreateInvoiceForm({
             name="customerName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("fields.customerName")}</FormLabel>
+                <FormLabel className="text-foreground">
+                  {t("fields.customerName")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Acme Corp"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="customerEmail"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">
+                  {t("fields.customerEmail")}{" "}
+                  <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="customer@example.com"
                     disabled={isLoading}
                     {...field}
                   />
@@ -188,7 +229,13 @@ export function CreateInvoiceForm({
                       min={1}
                       disabled={isLoading}
                       {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) =>
+                        field.onChange(
+                          Number.isNaN(e.target.valueAsNumber)
+                            ? 0
+                            : e.target.valueAsNumber,
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -207,7 +254,13 @@ export function CreateInvoiceForm({
                       step="0.01"
                       disabled={isLoading}
                       {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) =>
+                        field.onChange(
+                          Number.isNaN(e.target.valueAsNumber)
+                            ? 0
+                            : e.target.valueAsNumber,
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -227,7 +280,13 @@ export function CreateInvoiceForm({
                       step="0.1"
                       disabled={isLoading}
                       {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) =>
+                        field.onChange(
+                          Number.isNaN(e.target.valueAsNumber)
+                            ? 0
+                            : e.target.valueAsNumber,
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />

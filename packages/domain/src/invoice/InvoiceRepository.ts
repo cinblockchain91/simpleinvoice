@@ -1,10 +1,10 @@
 import type { Result } from "../shared/Result";
 import type { PaginatedResult, PaginationParams } from "../shared/Pagination";
-import type { Invoice, CreateInvoiceData } from "./Invoice";
+import type { Invoice, CreateInvoiceData, InvoiceStatus } from "./Invoice";
 import type { InvoiceError } from "./errors/InvoiceErrors";
 
 export interface ListInvoicesParams extends PaginationParams {
-  readonly status?: string;
+  readonly status?: InvoiceStatus;
   readonly keyword?: string;
 }
 
