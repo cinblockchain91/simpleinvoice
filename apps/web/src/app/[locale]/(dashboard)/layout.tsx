@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarInset } from "@/shadcn/ui/sidebar";
+import { SidebarProvider } from "@/shadcn/ui/sidebar";
 import { AppSidebar, DashboardHeader } from "@/widgets/app-shell";
 
 export default function DashboardLayout({
@@ -9,10 +9,10 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <main className="flex flex-1 min-w-0 flex-col">
         <DashboardHeader />
         <div className="flex flex-1 flex-col">{children}</div>
-      </SidebarInset>
+      </main>
     </SidebarProvider>
   );
 }
