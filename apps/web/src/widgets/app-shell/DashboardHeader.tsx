@@ -1,7 +1,9 @@
 "use client";
 
+import { PanelLeft } from "lucide-react";
 import { usePathname, Link } from "@/i18n/navigation";
 import { Separator } from "@/shadcn/ui/separator";
+import { Button } from "@/shadcn/ui/button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -38,11 +40,25 @@ function usePageBreadcrumb() {
   return { parent: null, current: segments[segments.length - 1] ?? "Home" };
 }
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  onToggle: () => void;
+}
+
+export function DashboardHeader({ onToggle }: DashboardHeaderProps) {
   const { parent, current } = usePageBreadcrumb();
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7"
+        onClick={onToggle}
+      >
+        <PanelLeft className="size-4" />
+        <span className="sr-only">Toggle sidebar</span>
+      </Button>
+      <Separator orientation="vertical" className="h-4" />
       <Breadcrumb>
         <BreadcrumbList>
           {parent && (
