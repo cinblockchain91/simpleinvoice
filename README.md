@@ -5,7 +5,9 @@
 > **101 Digital Web Engineer Assessment** — v2.2.4  
 > A production-grade invoicing web application built on Next.js 16, React 19, and TypeScript 5.
 
-**Live demo:** https://simpleinvoice-web.vercel.app
+**Live demo:** https://simpleinvoice-web.vercel.app  
+Username: 94756921275
+Password: Password@12345
 
 ---
 
