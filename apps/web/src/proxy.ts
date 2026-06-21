@@ -4,7 +4,6 @@ import { routing, type Locale } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-const PROTECTED_PATHS = ["/invoices"];
 const AUTH_PATHS = ["/login"];
 
 function getLocaleFromPathname(pathname: string): Locale {
@@ -30,9 +29,6 @@ async function authProxy(request: NextRequest): Promise<NextResponse> {
 
   const hasToken = request.cookies.has("access_token");
 
-  const isProtected = PROTECTED_PATHS.some(
-    (p) => path === p || path.startsWith(`${p}/`),
-  );
   const isAuthRoute = AUTH_PATHS.some((p) => path === p);
   const isRoot = path === "/";
 
@@ -46,7 +42,8 @@ async function authProxy(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  if (isProtected && !hasToken) {
+  // Any non-auth path requires authentication
+  if (!hasToken && !isAuthRoute) {
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 

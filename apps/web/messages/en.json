@@ -59,7 +59,9 @@
       "invoiceNumber": "Invoice Number",
       "currency": "Currency",
       "issueDate": "Issue Date",
+      "issueDatePlaceholder": "Pick issue date",
       "dueDate": "Due Date",
+      "dueDatePlaceholder": "Pick due date",
       "customerName": "Customer Name",
       "customerId": "Customer ID"
     },

@@ -18,7 +18,6 @@ const MOCK_CREATE_DATA: CreateInvoiceData = {
   currency: "USD",
   issueDate: "2024-01-15",
   dueDate: "2024-02-15",
-  customerId: "cust-001",
   customerName: "Acme Corp",
   items: [
     {

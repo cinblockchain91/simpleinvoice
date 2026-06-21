@@ -12,7 +12,7 @@ export default function NewInvoicePage() {
   const { mutateAsync, isPending, error } = useCreateInvoice();
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
+    <div className="container max-w-[800px] px-8 py-8 space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/invoices">
@@ -24,8 +24,12 @@ export default function NewInvoicePage() {
 
       <CreateInvoiceForm
         onSubmit={async (data) => {
-          await mutateAsync(data);
-          router.push("/invoices");
+          try {
+            await mutateAsync(data);
+            router.push("/invoices");
+          } catch {
+            // errors handled by useCreateInvoice onError + global 401 handler
+          }
         }}
         isLoading={isPending}
         error={error?.message ?? null}

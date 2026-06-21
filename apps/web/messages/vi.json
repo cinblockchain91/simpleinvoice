@@ -59,7 +59,9 @@
       "invoiceNumber": "Số hóa đơn",
       "currency": "Đơn vị tiền tệ",
       "issueDate": "Ngày phát hành",
+      "issueDatePlaceholder": "Chọn ngày phát hành",
       "dueDate": "Ngày đến hạn",
+      "dueDatePlaceholder": "Chọn ngày đến hạn",
       "customerName": "Tên khách hàng",
       "customerId": "Mã khách hàng"
     },

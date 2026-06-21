@@ -35,7 +35,7 @@ const ApiInvoiceSchema = z
     totalTax: z.number(),
     totalAmount: z.number(),
     status: ApiStatusSchema,
-    customer: z.object({ id: z.string() }).passthrough(),
+    customer: z.object({ id: z.string() }).passthrough().optional(),
     createdAt: z.string().optional(),
   })
   .passthrough();
@@ -60,6 +60,7 @@ const ApiListResponseSchema = z
 const STATUS_MAP: Record<string, InvoiceStatus> = {
   Draft: "DRAFT",
   Due: "PENDING",
+  Overdue: "PENDING",
   PartiallyPaid: "PENDING",
   Approved: "APPROVED",
   Paid: "APPROVED",
@@ -72,11 +73,11 @@ function mapStatus(
   status: Array<{ key: string; value: boolean }>,
 ): InvoiceStatus {
   const active = status.find((s) => s.value)?.key ?? "";
-  return STATUS_MAP[active] ?? "PENDING";
+  return STATUS_MAP[active] ?? "DRAFT";
 }
 
 function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
-  const customer = api.customer as { id: string; name?: string };
+  const customer = api.customer as { id: string; name?: string } | undefined;
   return {
     id: api.invoiceId,
     invoiceNumber: api.invoiceNumber,
@@ -87,8 +88,8 @@ function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
     taxAmount: api.totalTax,
     issueDate: api.invoiceDate,
     dueDate: api.dueDate,
-    customerId: customer.id,
-    customerName: customer.name ?? customer.id,
+    customerId: customer?.id ?? "",
+    customerName: customer?.name ?? customer?.id ?? "",
     items: [],
     createdDate: api.createdAt ?? api.invoiceDate,
     modifiedDate: api.createdAt ?? api.invoiceDate,
@@ -111,7 +112,9 @@ export class InvoiceAdapter implements InvoiceRepository {
         pageNum: String(params.page),
         pageSize: String(params.pageSize),
       });
-      if (params.status) query.set("statuses", params.status);
+      if (params.status) {
+        query.set("statuses", params.status);
+      }
       if (params.keyword) query.set("keyword", params.keyword);
 
       const res = await fetch(
@@ -194,6 +197,38 @@ export class InvoiceAdapter implements InvoiceRepository {
     data: CreateInvoiceData,
   ): Promise<Result<Invoice, InvoiceError>> {
     try {
+      const payload = {
+        invoices: [
+          {
+            invoiceNumber: data.invoiceNumber,
+            currency: data.currency,
+            invoiceDate: data.issueDate,
+            dueDate: data.dueDate,
+            customer: {
+              firstName: data.customerName,
+              lastName: "",
+            },
+            items: data.items.map((item, i) => ({
+              itemReference: `item-${i + 1}`,
+              description: item.description,
+              quantity: item.quantity,
+              rate: item.unitPrice,
+              itemName: item.description,
+              ...(item.taxRate > 0 && {
+                extensions: [
+                  {
+                    addDeduct: "ADD",
+                    value: item.taxRate,
+                    type: "PERCENTAGE",
+                    name: "tax",
+                  },
+                ],
+              }),
+            })),
+          },
+        ],
+      };
+
       const res = await fetch(
         `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices`,
         {
@@ -201,22 +236,38 @@ export class InvoiceAdapter implements InvoiceRepository {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
             "org-token": this.orgToken,
+            "Operation-Mode": "SYNC",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(payload),
           cache: "no-store",
         },
       );
 
-      if (!res.ok)
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error(`[InvoiceAdapter.create] ${res.status}:`, errBody);
         return fail(
           new InvoiceCreateError(`API returned ${res.status}`, res.status),
         );
+      }
 
       const raw = await res.json();
-      const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);
-      if (!apiInvoice.success)
+      console.log("[InvoiceAdapter.create] raw response:", JSON.stringify(raw));
+
+      // 101Digital create response: { data: [invoice] }
+      const invoiceData = Array.isArray(raw?.data)
+        ? raw.data[0]
+        : (raw?.data?.invoices?.[0] ?? raw?.data ?? raw);
+      const apiInvoice = ApiInvoiceSchema.safeParse(invoiceData);
+      if (!apiInvoice.success) {
+        console.error(
+          "[InvoiceAdapter.create] Unexpected shape:",
+          JSON.stringify(invoiceData),
+          apiInvoice.error.message,
+        );
         return fail(new InvoiceCreateError("Unexpected response shape"));
+      }
 
       return ok(mapApiInvoice(apiInvoice.data));
     } catch (err) {

@@ -26,10 +26,11 @@ export default function InvoicesPage() {
   const [sortBy, setSortBy] = useState<SortField>("issueDate");
   const [order, setOrder] = useState<SortOrder>("desc");
 
-  const { keyword, debouncedKeyword, setKeyword } = useInvoiceSearch();
+  const { keyword, debouncedKeyword, setKeyword, isPending } =
+    useInvoiceSearch();
   const { page, pageSize, setPage } = useInvoicePagination();
 
-  const { data, isLoading, isError } = useInvoiceList({
+  const { data, isLoading, isFetching, isError } = useInvoiceList({
     page,
     pageSize,
     status,
@@ -79,7 +80,7 @@ export default function InvoicesPage() {
         <>
           <InvoiceTable
             invoices={sorted}
-            isLoading={isLoading}
+            isLoading={isLoading || isPending || isFetching}
             onRowClick={(id) => router.push(`/invoices/${id}`)}
           />
           <div className="flex items-center justify-between text-sm text-muted-foreground">

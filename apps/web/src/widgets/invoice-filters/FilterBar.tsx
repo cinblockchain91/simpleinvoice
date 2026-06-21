@@ -11,7 +11,6 @@ import type { InvoiceStatus } from "@/entities/invoice";
 
 const STATUS_OPTIONS: { value: InvoiceStatus | "ALL"; label: string }[] = [
   { value: "ALL", label: "All statuses" },
-  { value: "DRAFT", label: "Draft" },
   { value: "PENDING", label: "Pending" },
   { value: "APPROVED", label: "Approved" },
   { value: "REJECTED", label: "Rejected" },

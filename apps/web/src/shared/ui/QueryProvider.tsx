@@ -8,6 +8,7 @@ import {
   MutationCache,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { toast } from "sonner";
 
 function is401(error: unknown): boolean {
   return (
@@ -20,9 +21,8 @@ function is401(error: unknown): boolean {
 
 function handleBffError(error: unknown) {
   if (is401(error)) {
-    // Tokens cleared by the route handler — redirect to login so the user
-    // can re-authenticate. Use replace so the expired page isn't in history.
-    window.location.replace("/login");
+    toast.error("Session expired. Please login again.");
+    setTimeout(() => window.location.replace("/login"), 1500);
   }
 }
 
