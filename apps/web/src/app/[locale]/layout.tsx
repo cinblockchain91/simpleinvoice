@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { ThemeProvider, QueryProvider } from "@/shared/ui";
+import { QueryProvider } from "@/shared/ui";
 import { Toaster } from "@/shadcn/ui/sonner";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
@@ -30,16 +30,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider messages={messages}>
       <QueryProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <main className="flex flex-1 flex-col">{children}</main>
-          <Toaster position="bottom-right" richColors />
-        </ThemeProvider>
+        <Header />
+        <main className="flex flex-1 flex-col">{children}</main>
+        <Toaster position="bottom-right" richColors />
       </QueryProvider>
     </NextIntlClientProvider>
   );
