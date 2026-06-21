@@ -8,10 +8,18 @@ import {
   MutationCache,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { BffError } from "@/shared/api/bff-client";
+
+function is401(error: unknown): boolean {
+  return (
+    error != null &&
+    typeof error === "object" &&
+    "status" in error &&
+    (error as { status: unknown }).status === 401
+  );
+}
 
 function handleBffError(error: unknown) {
-  if (error instanceof BffError && error.status === 401) {
+  if (is401(error)) {
     // Tokens cleared by the route handler — redirect to login so the user
     // can re-authenticate. Use replace so the expired page isn't in history.
     window.location.replace("/login");
@@ -26,7 +34,7 @@ function makeQueryClient() {
       queries: {
         staleTime: 30 * 1000,
         retry: (failureCount, error) => {
-          if (error instanceof BffError && error.status === 401) return false;
+          if (is401(error)) return false;
           return failureCount < 1;
         },
       },
