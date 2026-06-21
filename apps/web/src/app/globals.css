@@ -155,3 +155,21 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+/* --------------------------------------------------------------------------
+   Sidebar offcanvas — Tailwind v4 does not generate group-data-[...]:* CSS
+   for the complex arbitrary values used inside shadcn/ui sidebar.tsx.
+   These rules replicate what the Tailwind classes would produce.
+   -------------------------------------------------------------------------- */
+.group[data-collapsible="offcanvas"] > [class~="relative"] {
+  width: 0;
+}
+.group[data-collapsible="offcanvas"] > [class~="fixed"] {
+  left: calc(var(--sidebar-width) * -1);
+}
+.group[data-collapsible="icon"] > [class~="relative"] {
+  width: var(--sidebar-width-icon);
+}
+.group[data-collapsible="icon"] > [class~="fixed"] {
+  width: var(--sidebar-width-icon);
+}
