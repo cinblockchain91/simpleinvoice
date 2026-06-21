@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import { InvoiceStatusBadge } from "@/entities/invoice";
 import type { Invoice } from "@/entities/invoice";
+import { invoiceQueryOptions } from "@/features/view-invoice";
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -46,6 +48,8 @@ export function InvoiceTable({
   isLoading = false,
   onRowClick,
 }: InvoiceTableProps) {
+  const queryClient = useQueryClient();
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -82,6 +86,9 @@ export function InvoiceTable({
                 key={invoice.id}
                 className={onRowClick ? "cursor-pointer" : undefined}
                 onClick={() => onRowClick?.(invoice.id)}
+                onMouseEnter={() =>
+                  queryClient.prefetchQuery(invoiceQueryOptions(invoice.id))
+                }
               >
                 <TableCell className="font-medium">
                   {invoice.invoiceNumber}

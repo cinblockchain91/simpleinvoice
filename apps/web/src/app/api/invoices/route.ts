@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { unstable_cache, revalidateTag } from "next/cache";
 import {
   ListInvoicesQuerySchema,
   CreateInvoiceRequestSchema,
@@ -9,6 +10,16 @@ import { InvoiceAdapter } from "@/infrastructure/101digital/InvoiceAdapter";
 import { SessionCookieStore } from "@/infrastructure/storage/SessionCookieStore";
 
 const cookieStore = new SessionCookieStore();
+
+// Short numeric hash used solely as a per-user cache key discriminator (not for security)
+function userKey(token: string): string {
+  let h = 5381;
+  const len = Math.min(token.length, 80);
+  for (let i = 0; i < len; i++) {
+    h = (Math.imul(h, 33) ^ token.charCodeAt(i)) >>> 0;
+  }
+  return h.toString(36);
+}
 
 export async function GET(request: NextRequest) {
   const session = await cookieStore.get();
@@ -34,8 +45,27 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const adapter = new InvoiceAdapter(session.accessToken, session.orgToken);
-  const result = await adapter.list(parsed.data);
+  const uk = userKey(session.accessToken);
+  const { page, pageSize, status, keyword } = parsed.data;
+  const listTag = `invoices:${uk}`;
+
+  const fetchInvoices = unstable_cache(
+    async () => {
+      const adapter = new InvoiceAdapter(session.accessToken, session.orgToken);
+      return adapter.list(parsed.data);
+    },
+    [
+      "invoices",
+      uk,
+      `p:${page}`,
+      `ps:${pageSize}`,
+      `st:${status ?? "ALL"}`,
+      `kw:${keyword ?? ""}`,
+    ],
+    { revalidate: 30, tags: [listTag] },
+  );
+
+  const result = await fetchInvoices();
 
   if (!result.ok) {
     if (result.error instanceof InvoiceFetchError) {
@@ -100,6 +130,9 @@ export async function POST(request: NextRequest) {
       { status: 503 },
     );
   }
+
+  // Bust the list cache for this user so the next GET returns fresh data
+  revalidateTag(`invoices:${userKey(session.accessToken)}`, {});
 
   return NextResponse.json(result.value, { status: 201 });
 }

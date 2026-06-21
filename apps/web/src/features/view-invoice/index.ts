@@ -1,1 +1,1 @@
-export { useInvoice } from "./model/useInvoice";
+export { useInvoice, invoiceQueryOptions } from "./model/useInvoice";

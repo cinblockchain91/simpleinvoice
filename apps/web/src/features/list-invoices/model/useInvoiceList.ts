@@ -29,5 +29,6 @@ export function useInvoiceList({
     queryKey: ["invoices", page, pageSize, status, keyword],
     queryFn: () => bffFetch<ListInvoicesResponse>(`/api/invoices?${params}`),
     placeholderData: (prev) => prev,
+    staleTime: 30_000,
   });
 }
