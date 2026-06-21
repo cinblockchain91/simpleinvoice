@@ -4,7 +4,7 @@ import { FileText, PlusCircle, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/shadcn/lib/utils";
-import { useLogout } from "@/features/auth";
+import { useLogout } from "@/shared/hooks/useLogout";
 
 const navItems = [
   {

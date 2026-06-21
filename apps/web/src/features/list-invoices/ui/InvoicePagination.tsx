@@ -1,12 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
   PaginationEllipsis,
 } from "@/shadcn/ui/pagination";
 
@@ -21,6 +21,8 @@ export function InvoicePagination({
   totalPages,
   onPageChange,
 }: InvoicePaginationProps) {
+  const t = useTranslations("common");
+
   if (totalPages <= 1) return null;
 
   const pages = buildPageRange(page, totalPages);
@@ -29,15 +31,20 @@ export function InvoicePagination({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
+          <PaginationLink
             href="#"
+            size="default"
+            aria-label={t("previous")}
+            aria-disabled={page <= 1}
+            className={`gap-1 pl-2.5 ${page <= 1 ? "pointer-events-none opacity-50" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               if (page > 1) onPageChange(page - 1);
             }}
-            aria-disabled={page <= 1}
-            className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-          />
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("previous")}</span>
+          </PaginationLink>
         </PaginationItem>
 
         {pages.map((p, i) =>
@@ -62,17 +69,20 @@ export function InvoicePagination({
         )}
 
         <PaginationItem>
-          <PaginationNext
+          <PaginationLink
             href="#"
+            size="default"
+            aria-label={t("next")}
+            aria-disabled={page >= totalPages}
+            className={`gap-1 pr-2.5 ${page >= totalPages ? "pointer-events-none opacity-50" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               if (page < totalPages) onPageChange(page + 1);
             }}
-            aria-disabled={page >= totalPages}
-            className={
-              page >= totalPages ? "pointer-events-none opacity-50" : ""
-            }
-          />
+          >
+            <span className="hidden sm:inline">{t("next")}</span>
+            <ChevronRight className="h-4 w-4" />
+          </PaginationLink>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/shadcn/ui/input";
 import { SearchIcon, XIcon } from "lucide-react";
 import { Button } from "@/shadcn/ui/button";
@@ -8,14 +9,10 @@ import { Button } from "@/shadcn/ui/button";
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
 }
 
-export function SearchBar({
-  value,
-  onChange,
-  placeholder = "Search invoices…",
-}: SearchBarProps) {
+export function SearchBar({ value, onChange }: SearchBarProps) {
+  const t = useTranslations("invoices");
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -25,7 +22,7 @@ export function SearchBar({
         ref={inputRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={t("filters.searchPlaceholder")}
         className="pl-9 pr-8 w-72"
       />
       {value && (
@@ -37,7 +34,7 @@ export function SearchBar({
             onChange("");
             inputRef.current?.focus();
           }}
-          aria-label="Clear search"
+          aria-label={t("filters.clearSearch")}
         >
           <XIcon className="h-3 w-3" />
         </Button>

@@ -148,14 +148,19 @@ test.describe("Invoice list", () => {
 
   test("renders Create Invoice button", async ({ page }) => {
     await page.goto("/en/invoices");
+    // Scope to <main> — the sidebar also has a "Create Invoice" nav link
     await expect(
-      page.getByRole("link", { name: /Create Invoice/i }),
+      page.getByRole("main").getByRole("link", { name: /Create Invoice/i }),
     ).toBeVisible();
   });
 
   test("navigates to create invoice page on button click", async ({ page }) => {
     await page.goto("/en/invoices");
-    await page.getByRole("link", { name: /Create Invoice/i }).click();
+    // Scope to <main> to avoid the sidebar "Create Invoice" nav link
+    await page
+      .getByRole("main")
+      .getByRole("link", { name: /Create Invoice/i })
+      .click();
     await expect(page).toHaveURL(/\/en\/invoices\/new$/);
     await expect(
       page.getByRole("heading", { name: "Create Invoice" }),
@@ -172,19 +177,41 @@ test.describe("Create invoice", () => {
   test("full create invoice flow — fills form, submits, shows toast, redirects", async ({
     page,
   }) => {
+    // Freeze JS Date so the DatePicker calendar opens at a known month (June 2026)
+    await page.clock.setFixedTime(new Date("2026-06-21T12:00:00Z"));
     await page.goto("/en/invoices/new");
 
     // Fill invoice header fields
     await page.getByLabel("Invoice Number").fill("INV-E2E-001");
     await page.getByLabel("Currency").fill("USD");
-    await page.getByLabel("Issue Date").fill("2026-06-21");
-    await page.getByLabel("Due Date").fill("2026-07-21");
+
+    // Issue Date — DatePicker is a calendar popover, not a plain input.
+    // Click the trigger to open the calendar, then click the desired day.
+    await page.getByLabel(/Issue Date/i).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Sunday, June 21st, 2026" })
+      .click();
+
+    // Due Date — open picker, navigate one month forward, select July 21
+    await page.getByLabel(/Due Date/i).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Go to the Next Month" })
+      .click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Tuesday, July 21st, 2026" })
+      .click();
+
     await page.getByLabel("Customer Name").fill("E2E Test Corp");
-    await page.getByLabel("Customer ID").fill("cust-e2e-001");
+    await page.getByLabel("Customer Email").fill("test@e2e.com");
 
     // Fill the first line item
-    const descriptionInputs = page.getByPlaceholder("Description");
-    await descriptionInputs.first().fill("Consulting services");
+    await page
+      .getByPlaceholder("Description")
+      .first()
+      .fill("Consulting services");
 
     // Submit the form
     await page.getByRole("button", { name: "Create Invoice" }).click();
@@ -212,7 +239,7 @@ test.describe("Create invoice", () => {
 
   test("back button navigates to invoice list", async ({ page }) => {
     await page.goto("/en/invoices/new");
-    await page.getByRole("link", { name: "" }).click(); // arrow back icon link
+    await page.getByRole("link", { name: "Back to invoices" }).click();
 
     await expect(page).toHaveURL(/\/en\/invoices$/);
   });

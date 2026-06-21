@@ -34,7 +34,7 @@
   "invoices": {
     "title": "Invoices",
     "createInvoice": "Create Invoice",
-    "detail": "Invoice Detail",
+    "detailTitle": "Invoice Detail",
     "empty": "No invoices found",
     "columns": {
       "invoiceNumber": "Invoice #",
@@ -45,12 +45,28 @@
       "status": "Status"
     },
     "filters": {
-      "searchPlaceholder": "Search by invoice # or customer",
+      "searchPlaceholder": "Search invoices…",
+      "clearSearch": "Clear search",
       "statusPlaceholder": "Filter by status",
       "allStatuses": "All statuses"
     },
+    "sort": {
+      "ascending": "Sort ascending",
+      "descending": "Sort descending"
+    },
     "pagination": {
-      "showing": "Showing {from}–{to} of {total} invoices"
+      "showing": "Showing {from}–{to} of {total} invoices",
+      "totalCount": "{total, plural, one {# invoice total} other {# invoices total}}"
+    },
+    "loadError": "Failed to load invoices. Please try again.",
+    "detail": {
+      "customer": "Customer",
+      "issueDate": "Issue Date",
+      "dueDate": "Due Date",
+      "subTotal": "Sub Total",
+      "tax": "Tax",
+      "totalAmount": "Total Amount",
+      "loadError": "Failed to load invoice."
     }
   },
   "createInvoice": {

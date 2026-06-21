@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -11,6 +13,7 @@ import {
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import { InvoiceStatusBadge } from "@/entities/invoice";
 import type { Invoice } from "@/entities/invoice";
+import { invoiceQueryOptions } from "@/features/view-invoice";
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -32,20 +35,23 @@ function formatDate(iso: string) {
   });
 }
 
-const COLUMNS = [
-  "Invoice #",
-  "Customer",
-  "Issue Date",
-  "Due Date",
-  "Amount",
-  "Status",
-];
-
 export function InvoiceTable({
   invoices,
   isLoading = false,
   onRowClick,
 }: InvoiceTableProps) {
+  const t = useTranslations("invoices");
+  const queryClient = useQueryClient();
+
+  const COLUMNS = [
+    t("columns.invoiceNumber"),
+    t("columns.customer"),
+    t("columns.issueDate"),
+    t("columns.dueDate"),
+    t("columns.amount"),
+    t("columns.status"),
+  ];
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -73,7 +79,7 @@ export function InvoiceTable({
                 colSpan={COLUMNS.length}
                 className="h-32 text-center text-muted-foreground"
               >
-                No invoices found.
+                {t("empty")}
               </TableCell>
             </TableRow>
           ) : (
@@ -82,6 +88,9 @@ export function InvoiceTable({
                 key={invoice.id}
                 className={onRowClick ? "cursor-pointer" : undefined}
                 onClick={() => onRowClick?.(invoice.id)}
+                onMouseEnter={() =>
+                  queryClient.prefetchQuery(invoiceQueryOptions(invoice.id))
+                }
               >
                 <TableCell className="font-medium">
                   {invoice.invoiceNumber}
