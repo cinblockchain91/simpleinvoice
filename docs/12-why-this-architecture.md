@@ -26,6 +26,8 @@ Concrete benefits of **Feature-Sliced Hexagonal (FSH)** — Hexagonal (Ports & A
 | Feature hooks test in complete isolation | Each slice (`useLogin`, `useCreateInvoice`, …) is self-contained. Cross-feature imports are forbidden by ESLint, so testing one hook never accidentally exercises another   |
 | E2E only needs to mock the BFF           | Every 101Digital call is proxied through `/api/*`. Playwright intercepts with `page.route("**/api/**", …)` — no external accounts, no VPN, no staging environment required  |
 
+→ [Before / After Examples](examples/testability-examples.md)
+
 ---
 
 ## Reliability
@@ -36,6 +38,8 @@ Concrete benefits of **Feature-Sliced Hexagonal (FSH)** — Hexagonal (Ports & A
 | Zod validates at every boundary          | `packages/api-contracts` is the single source of truth for request/response shapes. The same schema validates React Hook Form on the client **and** the Route Handler on the server |
 | Server errors cannot leak to the browser | The BFF proxy catches 101Digital responses and returns only what the client needs. Internal messages, stack traces, and upstream API details never appear in the browser            |
 | The secure path is the only path         | Tokens live in `HttpOnly` cookies set by the server. There is no `localStorage` code path to accidentally choose — the design makes the wrong choice structurally unavailable       |
+
+→ [Before / After Examples](examples/reliability-examples.md)
 
 ---
 
@@ -48,6 +52,8 @@ Concrete benefits of **Feature-Sliced Hexagonal (FSH)** — Hexagonal (Ports & A
 | Swapping infrastructure does not touch domain    | Replace the 101Digital REST adapter with GraphQL? Edit `InvoiceAdapter.ts`. Domain use cases and feature hooks stay unchanged — they depend on the port, not the adapter      |
 | Swapping UI does not touch business logic        | Migrating from shadcn/ui to another component library means editing `shared/ui/` and `shadcn/`. Domain, use cases, and feature models do not know a design system exists      |
 
+→ [Before / After Examples](examples/maintainability-examples.md)
+
 ---
 
 ## Scalability
@@ -58,6 +64,8 @@ Concrete benefits of **Feature-Sliced Hexagonal (FSH)** — Hexagonal (Ports & A
 | Teams work in parallel without merge conflicts            | Team A owns `features/create-invoice/`; Team B owns `features/list-invoices/`. The forbidden cross-feature import rule means neither team can accidentally break the other's slice |
 | Adding a feature never requires refactoring existing ones | Each FSD slice is self-contained. New features plug into widget and page layers from the outside — they never reach into existing feature internals                                |
 
+→ [Before / After Examples](examples/scalability-examples.md)
+
 ---
 
 ## Framework Independence
@@ -66,6 +74,8 @@ Concrete benefits of **Feature-Sliced Hexagonal (FSH)** — Hexagonal (Ports & A
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Next.js is a delivery mechanism, not the foundation | `packages/domain` has zero Next.js, React, or browser globals. The entire business-logic layer could move to a Fastify API, a CLI tool, or React Native without a single line change |
 | The domain survives framework upgrades              | When Next.js ships a major breaking change, only the `apps/web` adapter layer needs updating. The blast radius of an upgrade is bounded by the hexagonal boundary                    |
+
+→ [Before / After Examples](examples/framework-independence-examples.md)
 
 ---
 
@@ -82,3 +92,5 @@ The most important distinction: this architecture **does not allow mistakes** �
 | Cross-feature coupling causing regressions | ESLint import rule fails CI before code is merged                                         |
 
 Security is not a checklist applied at the end. It is the default outcome of following the architecture.
+
+→ [Before / After Examples](examples/security-examples.md)
