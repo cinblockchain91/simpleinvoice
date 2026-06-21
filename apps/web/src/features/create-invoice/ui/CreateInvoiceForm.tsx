@@ -198,7 +198,7 @@ export function CreateInvoiceForm({
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_80px_100px_80px_36px] sm:items-start"
+              className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_80px_100px_80px_36px] sm:items-start border rounded-md p-2"
             >
               <FormField
                 control={form.control}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/shadcn/ui/button";
 import { InvoiceTable } from "@/widgets/invoice-table";
 import { FilterBar } from "@/widgets/invoice-filters";
@@ -20,6 +20,7 @@ import type { InvoiceStatus } from "@/entities/invoice";
 
 export default function InvoicesPage() {
   const t = useTranslations("invoices");
+  const router = useRouter();
 
   const [status, setStatus] = useState<InvoiceStatus | "ALL">("ALL");
   const [sortBy, setSortBy] = useState<SortField>("issueDate");
@@ -49,9 +50,9 @@ export default function InvoicesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <Button asChild>
+        <Button asChild className="h-[35px] w-fit">
           <Link href="/invoices/new">
             <PlusIcon className="mr-2 h-4 w-4" />
             {t("createInvoice")}
@@ -76,7 +77,11 @@ export default function InvoicesPage() {
         </div>
       ) : (
         <>
-          <InvoiceTable invoices={sorted} isLoading={isLoading} />
+          <InvoiceTable
+            invoices={sorted}
+            isLoading={isLoading}
+            onRowClick={(id) => router.push(`/invoices/${id}`)}
+          />
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>
               {total} invoice{total !== 1 ? "s" : ""} total

@@ -15,6 +15,7 @@ import type { Invoice } from "@/entities/invoice";
 interface InvoiceTableProps {
   invoices: Invoice[];
   isLoading?: boolean;
+  onRowClick?: (id: string) => void;
 }
 
 function formatCurrency(amount: number, currency: string) {
@@ -43,6 +44,7 @@ const COLUMNS = [
 export function InvoiceTable({
   invoices,
   isLoading = false,
+  onRowClick,
 }: InvoiceTableProps) {
   return (
     <div className="rounded-md border">
@@ -76,7 +78,11 @@ export function InvoiceTable({
             </TableRow>
           ) : (
             invoices.map((invoice) => (
-              <TableRow key={invoice.id}>
+              <TableRow
+                key={invoice.id}
+                className={onRowClick ? "cursor-pointer" : undefined}
+                onClick={() => onRowClick?.(invoice.id)}
+              >
                 <TableCell className="font-medium">
                   {invoice.invoiceNumber}
                 </TableCell>

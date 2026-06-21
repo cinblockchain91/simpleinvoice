@@ -34,6 +34,7 @@
   "invoices": {
     "title": "Invoices",
     "createInvoice": "Create Invoice",
+    "detail": "Invoice Detail",
     "empty": "No invoices found",
     "columns": {
       "invoiceNumber": "Invoice #",
@@ -87,6 +88,9 @@
     "submitLoading": "Creating...",
     "successMessage": "Invoice created successfully",
     "errorMessage": "Failed to create invoice. Please try again."
+  },
+  "nav": {
+    "platform": "Platform"
   },
   "metadata": {
     "title": "SimpleInvoice",

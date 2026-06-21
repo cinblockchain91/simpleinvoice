@@ -34,6 +34,7 @@
   "invoices": {
     "title": "Hóa đơn",
     "createInvoice": "Tạo hóa đơn",
+    "detail": "Chi tiết hóa đơn",
     "empty": "Không tìm thấy hóa đơn nào",
     "columns": {
       "invoiceNumber": "Số hóa đơn",
@@ -87,6 +88,9 @@
     "submitLoading": "Đang tạo...",
     "successMessage": "Tạo hóa đơn thành công",
     "errorMessage": "Tạo hóa đơn thất bại. Vui lòng thử lại."
+  },
+  "nav": {
+    "platform": "Điều hướng"
   },
   "metadata": {
     "title": "SimpleInvoice",
