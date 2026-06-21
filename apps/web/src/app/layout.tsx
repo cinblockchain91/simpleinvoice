@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getLocale } from "next-intl/server";
+import NextTopLoader from "nextjs-toploader";
+import { ThemeProvider } from "@/shared/ui";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +34,15 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextTopLoader showSpinner={false} />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

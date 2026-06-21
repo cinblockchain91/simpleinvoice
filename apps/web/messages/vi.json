@@ -33,6 +33,8 @@
   },
   "invoices": {
     "title": "Hóa đơn",
+    "createInvoice": "Tạo hóa đơn",
+    "detailTitle": "Chi tiết hóa đơn",
     "empty": "Không tìm thấy hóa đơn nào",
     "columns": {
       "invoiceNumber": "Số hóa đơn",
@@ -43,12 +45,28 @@
       "status": "Trạng thái"
     },
     "filters": {
-      "searchPlaceholder": "Tìm theo số hóa đơn hoặc khách hàng",
+      "searchPlaceholder": "Tìm kiếm hóa đơn…",
+      "clearSearch": "Xóa tìm kiếm",
       "statusPlaceholder": "Lọc theo trạng thái",
       "allStatuses": "Tất cả trạng thái"
     },
+    "sort": {
+      "ascending": "Sắp xếp tăng dần",
+      "descending": "Sắp xếp giảm dần"
+    },
     "pagination": {
-      "showing": "Hiển thị {from}–{to} trong {total} hóa đơn"
+      "showing": "Hiển thị {from}–{to} trong {total} hóa đơn",
+      "totalCount": "Tổng cộng {total} hóa đơn"
+    },
+    "loadError": "Không thể tải danh sách hóa đơn. Vui lòng thử lại.",
+    "detail": {
+      "customer": "Khách hàng",
+      "issueDate": "Ngày phát hành",
+      "dueDate": "Ngày đến hạn",
+      "subTotal": "Tạm tính",
+      "tax": "Thuế",
+      "totalAmount": "Tổng cộng",
+      "loadError": "Không thể tải hóa đơn."
     }
   },
   "createInvoice": {
@@ -57,8 +75,11 @@
       "invoiceNumber": "Số hóa đơn",
       "currency": "Đơn vị tiền tệ",
       "issueDate": "Ngày phát hành",
+      "issueDatePlaceholder": "Chọn ngày phát hành",
       "dueDate": "Ngày đến hạn",
+      "dueDatePlaceholder": "Chọn ngày đến hạn",
       "customerName": "Tên khách hàng",
+      "customerEmail": "Email khách hàng",
       "customerId": "Mã khách hàng"
     },
     "lineItems": {
@@ -84,7 +105,11 @@
     },
     "submit": "Tạo hóa đơn",
     "submitLoading": "Đang tạo...",
-    "successMessage": "Tạo hóa đơn thành công"
+    "successMessage": "Tạo hóa đơn thành công",
+    "errorMessage": "Tạo hóa đơn thất bại. Vui lòng thử lại."
+  },
+  "nav": {
+    "platform": "Điều hướng"
   },
   "metadata": {
     "title": "SimpleInvoice",

@@ -12,19 +12,29 @@ export const NewInvoiceItemSchema = z.object({
 
 export type NewInvoiceItem = z.infer<typeof NewInvoiceItemSchema>;
 
-export const CreateInvoiceRequestSchema = z.object({
-  invoiceNumber: z.string().min(1, "Invoice number is required"),
-  currency: z.string().length(3, "Currency must be a 3-letter ISO 4217 code"),
-  issueDate: z
-    .string()
-    .regex(ISO_DATE, "Issue date must be in YYYY-MM-DD format"),
-  dueDate: z.string().regex(ISO_DATE, "Due date must be in YYYY-MM-DD format"),
-  customerId: z.string().min(1, "Customer ID is required"),
-  customerName: z.string().min(1, "Customer name is required"),
-  items: z
-    .array(NewInvoiceItemSchema)
-    .min(1, "At least one line item is required"),
-});
+export const CreateInvoiceRequestSchema = z
+  .object({
+    invoiceNumber: z.string().min(1, "Invoice number is required"),
+    currency: z.string().length(3, "Currency must be a 3-letter ISO 4217 code"),
+    issueDate: z
+      .string()
+      .regex(ISO_DATE, "Issue date must be in YYYY-MM-DD format"),
+    dueDate: z
+      .string()
+      .regex(ISO_DATE, "Due date must be in YYYY-MM-DD format"),
+    customerName: z.string().min(1, "Customer name is required"),
+    customerEmail: z
+      .string()
+      .email("Customer email must be a valid email address")
+      .min(1, "Customer email is required"),
+    items: z
+      .array(NewInvoiceItemSchema)
+      .min(1, "At least one line item is required"),
+  })
+  .refine((d) => d.dueDate >= d.issueDate, {
+    message: "Due date must be on or after issue date",
+    path: ["dueDate"],
+  });
 
 export type CreateInvoiceRequest = z.infer<typeof CreateInvoiceRequestSchema>;
 

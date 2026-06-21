@@ -14,7 +14,7 @@ export async function GET() {
   let profile: UserProfile;
   try {
     const res = await fetch(
-      `${env.DIGITAL_BASE_URL}/membership-service/2.0.0/users/me`,
+      `${env.DIGITAL_API_BASE_URL}/membership-service/1.0.0/users/me`,
       {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,

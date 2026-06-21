@@ -4,7 +4,12 @@ import { z } from "zod";
 const schema = z.object({
   DIGITAL_CLIENT_ID: z.string().min(1, "DIGITAL_CLIENT_ID is required"),
   DIGITAL_CLIENT_SECRET: z.string().min(1, "DIGITAL_CLIENT_SECRET is required"),
-  DIGITAL_BASE_URL: z.string().url("DIGITAL_BASE_URL must be a valid URL"),
+  DIGITAL_AUTH_BASE_URL: z
+    .string()
+    .url("DIGITAL_AUTH_BASE_URL must be a valid URL"),
+  DIGITAL_API_BASE_URL: z
+    .string()
+    .url("DIGITAL_API_BASE_URL must be a valid URL"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -26,8 +31,6 @@ function getValidatedEnv(): Env {
   return _env;
 }
 
-// Lazily validated proxy — defers env parsing to first request so that
-// Next.js can build without runtime secrets present in CI.
 export const env = new Proxy({} as Env, {
   get(_, prop: string | symbol) {
     return getValidatedEnv()[prop as keyof Env];

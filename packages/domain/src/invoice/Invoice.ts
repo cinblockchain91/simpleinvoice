@@ -44,7 +44,7 @@ export interface CreateInvoiceData {
   readonly currency: string;
   readonly issueDate: string;
   readonly dueDate: string;
-  readonly customerId: string;
   readonly customerName: string;
+  readonly customerEmail: string;
   readonly items: readonly NewInvoiceItem[];
 }

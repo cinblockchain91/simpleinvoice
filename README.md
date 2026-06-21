@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SimpleInvoice
 
-## Getting Started
+![SimpleInvoice Demo](docs/demo1.PNG)
 
-First, run the development server:
+> **101 Digital Web Engineer Assessment** — v2.2.4  
+> A production-grade invoicing web application built on Next.js 16, React 19, and TypeScript 5.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Live demo:** https://simpleinvoice-web.vercel.app  
+**Username:** 94756921275  
+**Password:** Password@12345
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Documentation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Topic                                                      | Description                                                                                                 |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [Overview](docs/01-overview.md)                            | What the app does and how the BFF proxy keeps tokens off the browser                                        |
+| [Architecture](docs/02-architecture.md)                    | Feature-Sliced Hexagonal (FSH) pattern, dependency rule, monorepo layout, and the BFF security flow diagram |
+| [Tech Stack](docs/03-tech-stack.md)                        | Every library used and the rationale behind each choice                                                     |
+| [Project Structure](docs/04-project-structure.md)          | Annotated directory tree covering all FSD layers, BFF routes, and test infrastructure                       |
+| [Getting Started](docs/05-getting-started.md)              | Clone → install → configure env vars → run locally                                                          |
+| [Running Tests](docs/06-running-tests.md)                  | Unit, integration (MSW), E2E (Playwright), and type-check commands                                          |
+| [Available Scripts](docs/07-available-scripts.md)          | Full list of `pnpm` commands with descriptions                                                              |
+| [Environment Variables](docs/08-environment-variables.md)  | All required server-only env vars and where to set them                                                     |
+| [Security Design](docs/09-security-design.md)              | HttpOnly cookies, BFF proxy, CSP headers, secrets hygiene, and boundary tests                               |
+| [Internationalization](docs/10-internationalization.md)    | English / Vietnamese URL-based locale routing and language switcher                                         |
+| [Design Decisions](docs/11-design-decisions.md)            | Architectural "why" answers — hexagonal core, Result type, TanStack Query, MSW                              |
+| [Why This Architecture?](docs/12-why-this-architecture.md) | Testability, reliability, maintainability, scalability, and security benefits of FSH                        |

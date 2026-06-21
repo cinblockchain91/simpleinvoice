@@ -118,6 +118,12 @@ importers:
       "@simpleinvoice/domain":
         specifier: workspace:^
         version: link:../../packages/domain
+      "@tanstack/react-query":
+        specifier: ^5.101.0
+        version: 5.101.0(react@19.2.4)
+      "@tanstack/react-query-devtools":
+        specifier: ^5.101.0
+        version: 5.101.0(@tanstack/react-query@5.101.0(react@19.2.4))(react@19.2.4)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -141,13 +147,16 @@ importers:
         version: 1.21.0(react@19.2.4)
       next:
         specifier: 16.2.9
-        version: 16.2.9(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-intl:
         specifier: ^4.13.0
-        version: 4.13.0(next@16.2.9(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+        version: 4.13.0(next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      nextjs-toploader:
+        specifier: ^3.9.17
+        version: 3.9.17(next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -185,6 +194,9 @@ importers:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(react@19.2.4)
     devDependencies:
+      "@playwright/test":
+        specifier: ^1.61.0
+        version: 1.61.0
       "@simpleinvoice/config":
         specifier: workspace:*
         version: link:../../packages/config
@@ -264,6 +276,9 @@ importers:
       typescript:
         specifier: ^5
         version: 5.9.3
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.9(@types/node@20.19.43)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1)(msw@2.14.6(@types/node@20.19.43)(typescript@5.9.3))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(yaml@2.9.0))
 
 packages:
   "@adobe/css-tools@4.5.0":
@@ -1413,6 +1428,14 @@ packages:
         integrity: sha512-tmmZ3lQxAe/k/+rNnXQRawJ4NjxO2hqiOLTHvWchtGZULp4RyFeh6aU4XdOYBFe2KE1oShQTv4AblOs2iOrNnQ==,
       }
     engines: { node: ">= 10.0.0" }
+
+  "@playwright/test@1.61.0":
+    resolution:
+      {
+        integrity: sha512-cKA5B6lpFEMyMGjxF54QihfYpB4FkEGH+qZhtArDEG+wezQAJY8Pq6C7T1SjWz+FFzt3TbyoXBQYk/0292TdJA==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   "@radix-ui/number@1.1.2":
     resolution:
@@ -2636,6 +2659,35 @@ packages:
       {
         integrity: sha512-dNJuNbdEJT/SWRuXTYP1WSamelsz3ztkUsdtWQPjrexysrTpaEPM40P/71knXiXLYEojqPOEGitVLLpPMS5T6A==,
       }
+
+  "@tanstack/query-core@5.101.0":
+    resolution:
+      {
+        integrity: sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow==,
+      }
+
+  "@tanstack/query-devtools@5.101.0":
+    resolution:
+      {
+        integrity: sha512-MVqw17k08RQtGGLEL654+dX/btbX9p/8WjkznO//zusLTMaObxi3Q+MoFwGVkC9K3tqjn8qrrNhJevXx4fJTeQ==,
+      }
+
+  "@tanstack/react-query-devtools@5.101.0":
+    resolution:
+      {
+        integrity: sha512-cpZA0+WqKXwrwMfiWZEGGF6QrIWVQFbhBtxqDF5sQsAfrFf47HIE6fiPbQU3wyAUEN2+7UNqLCQe7oG6m3f93w==,
+      }
+    peerDependencies:
+      "@tanstack/react-query": ^5.101.0
+      react: ^18 || ^19
+
+  "@tanstack/react-query@5.101.0":
+    resolution:
+      {
+        integrity: sha512-rLlJXSpkqfizLWgkR5+eLeIk0MvTx/meEIR7LRjxic+qxiQP8zVjq7BqQkiCMNLQBlLfuOLqqr6KO5GtrDlmSg==,
+      }
+    peerDependencies:
+      react: ^18 || ^19
 
   "@testing-library/dom@10.4.1":
     resolution:
@@ -4430,6 +4482,14 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  fsevents@2.3.2:
+    resolution:
+      {
+        integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==,
+      }
+    engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution:
       {
@@ -5560,6 +5620,16 @@ packages:
       sass:
         optional: true
 
+  nextjs-toploader@3.9.17:
+    resolution:
+      {
+        integrity: sha512-9OF0KSSLtoSAuNg2LZ3aTl4hR9mBDj5L9s9DZiFCbMlXehyICGjkIz5dVGzuATU2bheJZoBdFgq9w07AKSuQQw==,
+      }
+    peerDependencies:
+      next: ">= 6.0.0"
+      react: ">= 16.0.0"
+      react-dom: ">= 16.0.0"
+
   node-addon-api@7.1.1:
     resolution:
       {
@@ -5579,6 +5649,12 @@ packages:
         integrity: sha512-1uz8041X6LoI6ZSdZacM9lVY28vuzDlSKitnpbSNK0RfKoIJkX29NBPVEFXhnuSuEOA9Ww0xnPJ+ILWbGAv8DA==,
       }
     engines: { node: ">=18" }
+
+  nprogress@0.2.0:
+    resolution:
+      {
+        integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==,
+      }
 
   object-assign@4.1.1:
     resolution:
@@ -5755,6 +5831,22 @@ packages:
         integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==,
       }
     engines: { node: ">=12" }
+
+  playwright-core@1.61.0:
+    resolution:
+      {
+        integrity: sha512-caX7TrY3Ml6egyDX0WUcTHDxodl/b51y5wJOdCEA36QviK/s2g081hvmGs8eaE3DWb6NYZQ6BjO/QkNRPenoPA==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
+
+  playwright@1.61.0:
+    resolution:
+      {
+        integrity: sha512-Z+7BeeqQPRRzklHsVFP4KTGIyMxKUmfeRA4WisM6G3/XW6nwGeX6fX9qYaDa+CiUqpOkb2f6X3nar05R3kSuJQ==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   po-parser@2.1.1:
     resolution:
@@ -7701,6 +7793,10 @@ snapshots:
       "@parcel/watcher-win32-ia32": 2.5.6
       "@parcel/watcher-win32-x64": 2.5.6
 
+  "@playwright/test@1.61.0":
+    dependencies:
+      playwright: 1.61.0
+
   "@radix-ui/number@1.1.2": {}
 
   "@radix-ui/primitive@1.1.4": {}
@@ -8548,6 +8644,21 @@ snapshots:
       "@tailwindcss/oxide": 4.3.1
       postcss: 8.5.15
       tailwindcss: 4.3.1
+
+  "@tanstack/query-core@5.101.0": {}
+
+  "@tanstack/query-devtools@5.101.0": {}
+
+  "@tanstack/react-query-devtools@5.101.0(@tanstack/react-query@5.101.0(react@19.2.4))(react@19.2.4)":
+    dependencies:
+      "@tanstack/query-devtools": 5.101.0
+      "@tanstack/react-query": 5.101.0(react@19.2.4)
+      react: 19.2.4
+
+  "@tanstack/react-query@5.101.0(react@19.2.4)":
+    dependencies:
+      "@tanstack/query-core": 5.101.0
+      react: 19.2.4
 
   "@testing-library/dom@10.4.1":
     dependencies:
@@ -9767,6 +9878,9 @@ snapshots:
     dependencies:
       is-callable: 1.2.7
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -10370,14 +10484,14 @@ snapshots:
 
   next-intl-swc-plugin-extractor@4.13.0: {}
 
-  next-intl@4.13.0(next@16.2.9(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
+  next-intl@4.13.0(next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
     dependencies:
       "@formatjs/intl-localematcher": 0.8.10
       "@parcel/watcher": 2.5.6
       "@swc/core": 1.15.41
       icu-minify: 4.13.0
       negotiator: 1.0.0
-      next: 16.2.9(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next: 16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-intl-swc-plugin-extractor: 4.13.0
       po-parser: 2.1.1
       react: 19.2.4
@@ -10392,7 +10506,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  next@16.2.9(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       "@next/env": 16.2.9
       "@swc/helpers": 0.5.15
@@ -10411,10 +10525,19 @@ snapshots:
       "@next/swc-linux-x64-musl": 16.2.9
       "@next/swc-win32-arm64-msvc": 16.2.9
       "@next/swc-win32-x64-msvc": 16.2.9
+      "@playwright/test": 1.61.0
       sharp: 0.34.5
     transitivePeerDependencies:
       - "@babel/core"
       - babel-plugin-macros
+
+  nextjs-toploader@3.9.17(next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      next: 16.2.9(@babel/core@7.29.7)(@playwright/test@1.61.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      nprogress: 0.2.0
+      prop-types: 15.8.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   node-addon-api@7.1.1: {}
 
@@ -10426,6 +10549,8 @@ snapshots:
       semver: 6.3.1
 
   node-releases@2.0.48: {}
+
+  nprogress@0.2.0: {}
 
   object-assign@4.1.1: {}
 
@@ -10530,6 +10655,14 @@ snapshots:
   picomatch@2.3.2: {}
 
   picomatch@4.0.4: {}
+
+  playwright-core@1.61.0: {}
+
+  playwright@1.61.0:
+    dependencies:
+      playwright-core: 1.61.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   po-parser@2.1.1: {}
 

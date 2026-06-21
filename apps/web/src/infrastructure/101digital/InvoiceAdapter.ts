@@ -1,0 +1,308 @@
+import "server-only";
+import { z } from "zod";
+import {
+  ok,
+  fail,
+  InvoiceFetchError,
+  InvoiceNotFoundError,
+  InvoiceCreateError,
+} from "@simpleinvoice/domain";
+import type {
+  InvoiceRepository,
+  ListInvoicesParams,
+  Invoice,
+  InvoiceStatus,
+  CreateInvoiceData,
+  InvoiceError,
+} from "@simpleinvoice/domain";
+import type { Result, PaginatedResult } from "@simpleinvoice/domain";
+import { env } from "@/shared/config/env.server";
+
+// ─── Raw 101Digital response schemas ─────────────────────────────────────────
+
+const ApiStatusSchema = z.array(
+  z.object({ key: z.string(), value: z.boolean() }),
+);
+
+const ApiInvoiceSchema = z
+  .object({
+    invoiceId: z.string(),
+    invoiceNumber: z.string(),
+    currency: z.string(),
+    invoiceDate: z.string(),
+    dueDate: z.string(),
+    invoiceSubTotal: z.number(),
+    totalTax: z.number(),
+    totalAmount: z.number(),
+    status: ApiStatusSchema,
+    customer: z.object({ id: z.string() }).passthrough().optional(),
+    createdAt: z.string().optional(),
+  })
+  .passthrough();
+
+const ApiListResponseSchema = z
+  .object({
+    data: z.array(ApiInvoiceSchema),
+    paging: z.record(z.unknown()).optional(),
+    total: z.number().optional(),
+  })
+  .passthrough();
+
+// ─── Status mapping ───────────────────────────────────────────────────────────
+
+const STATUS_MAP: Record<string, InvoiceStatus> = {
+  Draft: "DRAFT",
+  Due: "PENDING",
+  Overdue: "PENDING",
+  PartiallyPaid: "PENDING",
+  Approved: "APPROVED",
+  Paid: "APPROVED",
+  Rejected: "REJECTED",
+  Void: "VOID",
+  Cancelled: "VOID",
+};
+
+// Domain → API filter value (101Digital accepted values: Due,Overdue,Paid,Cancelled,Rejected)
+const DOMAIN_TO_API_STATUS: Record<InvoiceStatus, string> = {
+  DRAFT: "Draft",
+  PENDING: "Due",
+  APPROVED: "Paid",
+  REJECTED: "Rejected",
+  VOID: "Cancelled",
+};
+
+function mapStatus(
+  status: Array<{ key: string; value: boolean }>,
+): InvoiceStatus {
+  const active = status.find((s) => s.value)?.key ?? "";
+  return STATUS_MAP[active] ?? "DRAFT";
+}
+
+function mapApiInvoice(api: z.infer<typeof ApiInvoiceSchema>): Invoice {
+  const customer = api.customer as
+    | { id: string; name?: string; firstName?: string; lastName?: string }
+    | undefined;
+
+  const fullName = [customer?.firstName, customer?.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const customerName = customer?.name ?? (fullName || (customer?.id ?? ""));
+
+  return {
+    id: api.invoiceId,
+    invoiceNumber: api.invoiceNumber,
+    status: mapStatus(api.status),
+    currency: api.currency,
+    totalAmount: api.totalAmount,
+    subTotal: api.invoiceSubTotal,
+    taxAmount: api.totalTax,
+    issueDate: api.invoiceDate,
+    dueDate: api.dueDate,
+    customerId: customer?.id ?? "",
+    customerName,
+    items: [],
+    createdDate: api.createdAt ?? api.invoiceDate,
+    modifiedDate: api.createdAt ?? api.invoiceDate,
+  };
+}
+
+// ─── Adapter ─────────────────────────────────────────────────────────────────
+
+export class InvoiceAdapter implements InvoiceRepository {
+  constructor(
+    private readonly accessToken: string,
+    private readonly orgToken: string,
+  ) {}
+
+  async list(
+    params: ListInvoicesParams,
+  ): Promise<Result<PaginatedResult<Invoice>, InvoiceError>> {
+    try {
+      const query = new URLSearchParams({
+        pageNum: String(params.page),
+        pageSize: String(params.pageSize),
+      });
+      if (params.status) {
+        query.set("status", DOMAIN_TO_API_STATUS[params.status]);
+      }
+      if (params.keyword) query.set("keyword", params.keyword);
+
+      const res = await fetch(
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices?${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+            "org-token": this.orgToken,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        },
+      );
+
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error(`[InvoiceAdapter.list] ${res.status}:`, errBody);
+        return fail(
+          new InvoiceFetchError(`API returned ${res.status}`, res.status),
+        );
+      }
+
+      const raw = await res.json();
+      const parsed = ApiListResponseSchema.safeParse(raw);
+      if (!parsed.success) {
+        console.error(
+          "[InvoiceAdapter.list] Unexpected shape:",
+          parsed.error.message,
+        );
+        return fail(new InvoiceFetchError("Unexpected response shape"));
+      }
+
+      const invoices = parsed.data.data.map(mapApiInvoice);
+      const paging = parsed.data.paging ?? {};
+      const TOTAL_KEYS = [
+        "total",
+        "totalRecord",
+        "totalRecords",
+        "totalCount",
+        "count",
+        "recordCount",
+        "Total",
+        "TotalRecord",
+      ];
+      const pagingTotal = TOTAL_KEYS.reduce<number | undefined>((found, k) => {
+        if (found !== undefined) return found;
+        const v = paging[k];
+        return typeof v === "number" && !Number.isNaN(v) ? v : undefined;
+      }, undefined);
+      const total = parsed.data.total ?? pagingTotal ?? invoices.length;
+
+      return ok({
+        data: invoices as readonly Invoice[],
+        total,
+        page: params.page,
+        pageSize: params.pageSize,
+      });
+    } catch (err) {
+      return fail(new InvoiceFetchError(String(err)));
+    }
+  }
+
+  async getById(id: string): Promise<Result<Invoice, InvoiceError>> {
+    try {
+      const res = await fetch(
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+            "org-token": this.orgToken,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        },
+      );
+
+      if (res.status === 404) return fail(new InvoiceNotFoundError(id));
+      if (!res.ok)
+        return fail(
+          new InvoiceFetchError(`API returned ${res.status}`, res.status),
+        );
+
+      const raw = await res.json();
+      const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);
+      if (!apiInvoice.success)
+        return fail(new InvoiceFetchError("Unexpected response shape"));
+
+      return ok(mapApiInvoice(apiInvoice.data));
+    } catch (err) {
+      return fail(new InvoiceFetchError(String(err)));
+    }
+  }
+
+  async create(
+    data: CreateInvoiceData,
+  ): Promise<Result<Invoice, InvoiceError>> {
+    try {
+      const payload = {
+        invoices: [
+          {
+            invoiceNumber: data.invoiceNumber,
+            currency: data.currency,
+            invoiceDate: data.issueDate,
+            dueDate: data.dueDate,
+            customer: {
+              firstName: data.customerName,
+              lastName: "",
+              contact: {
+                email: data.customerEmail,
+                mobileNumber: "",
+              },
+              addresses: [],
+            },
+            items: data.items.map((item, i) => ({
+              itemReference: `item-${i + 1}`,
+              description: item.description,
+              quantity: item.quantity,
+              rate: item.unitPrice,
+              itemName: item.description,
+              ...(item.taxRate > 0 && {
+                extensions: [
+                  {
+                    addDeduct: "ADD",
+                    value: item.taxRate,
+                    type: "PERCENTAGE",
+                    name: "tax",
+                  },
+                ],
+              }),
+            })),
+          },
+        ],
+      };
+
+      const res = await fetch(
+        `${env.DIGITAL_API_BASE_URL}/invoice-service/1.0.0/invoices`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+            "org-token": this.orgToken,
+            "Operation-Mode": "SYNC",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+          cache: "no-store",
+        },
+      );
+
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error(`[InvoiceAdapter.create] ${res.status}:`, errBody);
+        return fail(
+          new InvoiceCreateError(`API returned ${res.status}`, res.status),
+        );
+      }
+
+      const raw = await res.json();
+      console.log("[InvoiceAdapter.create] raw response:", JSON.stringify(raw));
+
+      // 101Digital create response: { data: [invoice] }
+      const invoiceData = Array.isArray(raw?.data)
+        ? raw.data[0]
+        : (raw?.data?.invoices?.[0] ?? raw?.data ?? raw);
+      const apiInvoice = ApiInvoiceSchema.safeParse(invoiceData);
+      if (!apiInvoice.success) {
+        console.error(
+          "[InvoiceAdapter.create] Unexpected shape:",
+          JSON.stringify(invoiceData),
+          apiInvoice.error.message,
+        );
+        return fail(new InvoiceCreateError("Unexpected response shape"));
+      }
+
+      return ok(mapApiInvoice(apiInvoice.data));
+    } catch (err) {
+      return fail(new InvoiceCreateError(String(err)));
+    }
+  }
+}
