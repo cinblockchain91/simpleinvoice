@@ -129,7 +129,9 @@ export class InvoiceAdapter implements InvoiceRepository {
       if (!res.ok) {
         const errBody = await res.text().catch(() => "");
         console.error(`[InvoiceAdapter.list] ${res.status}:`, errBody);
-        return fail(new InvoiceFetchError(`API returned ${res.status}`));
+        return fail(
+          new InvoiceFetchError(`API returned ${res.status}`, res.status),
+        );
       }
 
       const raw = await res.json();
@@ -173,7 +175,9 @@ export class InvoiceAdapter implements InvoiceRepository {
 
       if (res.status === 404) return fail(new InvoiceNotFoundError(id));
       if (!res.ok)
-        return fail(new InvoiceFetchError(`API returned ${res.status}`));
+        return fail(
+          new InvoiceFetchError(`API returned ${res.status}`, res.status),
+        );
 
       const raw = await res.json();
       const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);
@@ -205,7 +209,9 @@ export class InvoiceAdapter implements InvoiceRepository {
       );
 
       if (!res.ok)
-        return fail(new InvoiceCreateError(`API returned ${res.status}`));
+        return fail(
+          new InvoiceCreateError(`API returned ${res.status}`, res.status),
+        );
 
       const raw = await res.json();
       const apiInvoice = ApiInvoiceSchema.safeParse(raw?.data ?? raw);

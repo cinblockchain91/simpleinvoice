@@ -39,6 +39,10 @@ export async function GET(request: NextRequest) {
 
   if (!result.ok) {
     if (result.error instanceof InvoiceFetchError) {
+      if (result.error.upstreamStatus === 401) {
+        await cookieStore.clear();
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
       return NextResponse.json(
         { error: "Failed to fetch invoices" },
         { status: 502 },
@@ -82,6 +86,10 @@ export async function POST(request: NextRequest) {
 
   if (!result.ok) {
     if (result.error instanceof InvoiceCreateError) {
+      if (result.error.upstreamStatus === 401) {
+        await cookieStore.clear();
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
       return NextResponse.json(
         { error: "Failed to create invoice" },
         { status: 502 },

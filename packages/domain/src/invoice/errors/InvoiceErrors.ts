@@ -8,7 +8,10 @@ export class InvoiceNotFoundError extends Error {
 
 export class InvoiceFetchError extends Error {
   readonly kind = "InvoiceFetchError" as const;
-  constructor(cause: string) {
+  constructor(
+    cause: string,
+    readonly upstreamStatus?: number,
+  ) {
     super(`Failed to fetch invoices: ${cause}`);
     this.name = "InvoiceFetchError";
   }
@@ -16,7 +19,10 @@ export class InvoiceFetchError extends Error {
 
 export class InvoiceCreateError extends Error {
   readonly kind = "InvoiceCreateError" as const;
-  constructor(cause: string) {
+  constructor(
+    cause: string,
+    readonly upstreamStatus?: number,
+  ) {
     super(`Failed to create invoice: ${cause}`);
     this.name = "InvoiceCreateError";
   }
