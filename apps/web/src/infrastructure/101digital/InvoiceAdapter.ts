@@ -123,7 +123,7 @@ export class InvoiceAdapter implements InvoiceRepository {
       if (params.status) {
         const apiStatuses =
           DOMAIN_TO_API_STATUSES[params.status as InvoiceStatus];
-        if (apiStatuses) query.set("statuses", apiStatuses);
+        if (apiStatuses) query.set("status", apiStatuses);
       }
       if (params.keyword) query.set("keyword", params.keyword);
 
