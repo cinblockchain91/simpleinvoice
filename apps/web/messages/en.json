@@ -55,8 +55,10 @@
       "descending": "Sort descending"
     },
     "pagination": {
-      "showing": "Showing {from}–{to} of {total} invoices"
+      "showing": "Showing {from}–{to} of {total} invoices",
+      "totalCount": "{total, plural, one {# invoice total} other {# invoices total}}"
     },
+    "loadError": "Failed to load invoices. Please try again.",
     "detail": {
       "customer": "Customer",
       "issueDate": "Issue Date",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { InvoiceTable } from "@/widgets/invoice-table";
 import { FilterBar, SortControls } from "@/widgets/invoice-filters";
@@ -14,6 +15,7 @@ import {
 import type { InvoiceStatus } from "@/entities/invoice";
 
 export function InvoiceListContent() {
+  const t = useTranslations("invoices");
   const router = useRouter();
 
   const [status, setStatus] = useState<InvoiceStatus | "ALL">("ALL");
@@ -58,7 +60,7 @@ export function InvoiceListContent() {
 
       {isError ? (
         <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-          Failed to load invoices. Please try again.
+          {t("loadError")}
         </div>
       ) : (
         <>
@@ -68,9 +70,7 @@ export function InvoiceListContent() {
             onRowClick={(id) => router.push(`/invoices/${id}`)}
           />
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>
-              {total} invoice{total !== 1 ? "s" : ""} total
-            </span>
+            <span>{t("pagination.totalCount", { total })}</span>
             <InvoicePagination
               page={page}
               totalPages={pages}

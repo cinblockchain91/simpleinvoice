@@ -55,8 +55,10 @@
       "descending": "Sắp xếp giảm dần"
     },
     "pagination": {
-      "showing": "Hiển thị {from}–{to} trong {total} hóa đơn"
+      "showing": "Hiển thị {from}–{to} trong {total} hóa đơn",
+      "totalCount": "Tổng cộng {total} hóa đơn"
     },
+    "loadError": "Không thể tải danh sách hóa đơn. Vui lòng thử lại.",
     "detail": {
       "customer": "Khách hàng",
       "issueDate": "Ngày phát hành",
