@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  User,
+  CalendarDays,
+  CalendarCheck2,
+  Receipt,
+  Percent,
+  CreditCard,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import { Separator } from "@/shadcn/ui/separator";
 import { InvoiceStatusBadge } from "@/entities/invoice";
@@ -20,23 +29,35 @@ function formatDate(iso: string) {
 }
 
 function DetailRow({
+  icon: Icon,
   label,
   value,
+  highlight,
 }: {
+  icon: React.ElementType;
   label: string;
   value: React.ReactNode;
+  highlight?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
-      <span className="w-36 shrink-0 text-sm text-muted-foreground">
-        {label}
+    <div className="grid grid-cols-2 items-center py-3 border-b last:border-0">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Icon className="size-4 shrink-0" />
+        <span>{label}</span>
+      </div>
+      <span
+        className={
+          highlight ? "text-base font-semibold" : "text-sm font-medium"
+        }
+      >
+        {value}
       </span>
-      <span className="text-sm font-medium">{value}</span>
     </div>
   );
 }
 
 export function InvoiceDetailContent({ id }: { id: string }) {
+  const t = useTranslations("invoices");
   const { data: invoice, isLoading, isError, error } = useInvoice(id);
 
   if (isLoading) {
@@ -52,7 +73,7 @@ export function InvoiceDetailContent({ id }: { id: string }) {
   if (isError) {
     return (
       <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-        {(error as Error)?.message ?? "Failed to load invoice."}
+        {(error as Error)?.message ?? t("detail.loadError")}
       </div>
     );
   }
@@ -60,33 +81,45 @@ export function InvoiceDetailContent({ id }: { id: string }) {
   if (!invoice) return null;
 
   return (
-    <div className="rounded-lg border p-6 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="rounded-lg border overflow-hidden">
+      <div className="flex items-center justify-between px-6 py-4 bg-muted/30">
         <span className="text-lg font-semibold">{invoice.invoiceNumber}</span>
         <InvoiceStatusBadge status={invoice.status} />
       </div>
 
       <Separator />
 
-      <div className="space-y-3">
-        <DetailRow label="Customer" value={invoice.customerName} />
-        <DetailRow label="Issue Date" value={formatDate(invoice.issueDate)} />
-        <DetailRow label="Due Date" value={formatDate(invoice.dueDate)} />
+      <div className="px-6">
         <DetailRow
-          label="Sub Total"
+          icon={User}
+          label={t("detail.customer")}
+          value={invoice.customerName}
+        />
+        <DetailRow
+          icon={CalendarDays}
+          label={t("detail.issueDate")}
+          value={formatDate(invoice.issueDate)}
+        />
+        <DetailRow
+          icon={CalendarCheck2}
+          label={t("detail.dueDate")}
+          value={formatDate(invoice.dueDate)}
+        />
+        <DetailRow
+          icon={Receipt}
+          label={t("detail.subTotal")}
           value={formatCurrency(invoice.subTotal, invoice.currency)}
         />
         <DetailRow
-          label="Tax"
+          icon={Percent}
+          label={t("detail.tax")}
           value={formatCurrency(invoice.taxAmount, invoice.currency)}
         />
         <DetailRow
-          label="Total Amount"
-          value={
-            <span className="text-base font-semibold">
-              {formatCurrency(invoice.totalAmount, invoice.currency)}
-            </span>
-          }
+          icon={CreditCard}
+          label={t("detail.totalAmount")}
+          value={formatCurrency(invoice.totalAmount, invoice.currency)}
+          highlight
         />
       </div>
     </div>

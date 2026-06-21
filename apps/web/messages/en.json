@@ -51,6 +51,15 @@
     },
     "pagination": {
       "showing": "Showing {from}–{to} of {total} invoices"
+    },
+    "detail": {
+      "customer": "Customer",
+      "issueDate": "Issue Date",
+      "dueDate": "Due Date",
+      "subTotal": "Sub Total",
+      "tax": "Tax",
+      "totalAmount": "Total Amount",
+      "loadError": "Failed to load invoice."
     }
   },
   "createInvoice": {

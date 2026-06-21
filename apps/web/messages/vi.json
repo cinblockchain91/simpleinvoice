@@ -51,6 +51,15 @@
     },
     "pagination": {
       "showing": "Hiển thị {from}–{to} trong {total} hóa đơn"
+    },
+    "detail": {
+      "customer": "Khách hàng",
+      "issueDate": "Ngày phát hành",
+      "dueDate": "Ngày đến hạn",
+      "subTotal": "Tạm tính",
+      "tax": "Thuế",
+      "totalAmount": "Tổng cộng",
+      "loadError": "Không thể tải hóa đơn."
     }
   },
   "createInvoice": {
