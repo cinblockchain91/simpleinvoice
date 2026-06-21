@@ -69,16 +69,6 @@ const STATUS_MAP: Record<string, InvoiceStatus> = {
   Cancelled: "VOID",
 };
 
-// Reverse map: domain status → 101Digital API filter value (single value only).
-// Valid filter values per API docs: Due, Overdue, Paid, Cancelled, Rejected.
-// Multiple same-key params are not supported — use the primary representative value.
-const DOMAIN_TO_API_STATUSES: Partial<Record<InvoiceStatus, string>> = {
-  PENDING: "Due",
-  APPROVED: "Paid",
-  REJECTED: "Rejected",
-  VOID: "Cancelled",
-};
-
 function mapStatus(
   status: Array<{ key: string; value: boolean }>,
 ): InvoiceStatus {
@@ -123,9 +113,7 @@ export class InvoiceAdapter implements InvoiceRepository {
         pageSize: String(params.pageSize),
       });
       if (params.status) {
-        const apiStatus =
-          DOMAIN_TO_API_STATUSES[params.status as InvoiceStatus];
-        if (apiStatus) query.set("status", apiStatus);
+        query.set("statuses", params.status);
       }
       if (params.keyword) query.set("keyword", params.keyword);
 
