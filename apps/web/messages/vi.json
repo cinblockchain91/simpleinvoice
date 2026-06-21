@@ -45,9 +45,14 @@
       "status": "Trạng thái"
     },
     "filters": {
-      "searchPlaceholder": "Tìm theo số hóa đơn hoặc khách hàng",
+      "searchPlaceholder": "Tìm kiếm hóa đơn…",
+      "clearSearch": "Xóa tìm kiếm",
       "statusPlaceholder": "Lọc theo trạng thái",
       "allStatuses": "Tất cả trạng thái"
+    },
+    "sort": {
+      "ascending": "Sắp xếp tăng dần",
+      "descending": "Sắp xếp giảm dần"
     },
     "pagination": {
       "showing": "Hiển thị {from}–{to} trong {total} hóa đơn"

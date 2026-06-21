@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -17,13 +18,6 @@ export type SortField =
   | "invoiceNumber";
 export type SortOrder = "asc" | "desc";
 
-const SORT_OPTIONS: { value: SortField; label: string }[] = [
-  { value: "issueDate", label: "Issue Date" },
-  { value: "dueDate", label: "Due Date" },
-  { value: "totalAmount", label: "Amount" },
-  { value: "invoiceNumber", label: "Invoice #" },
-];
-
 interface SortControlsProps {
   sortBy: SortField;
   order: SortOrder;
@@ -37,6 +31,15 @@ export function SortControls({
   onSortByChange,
   onOrderChange,
 }: SortControlsProps) {
+  const t = useTranslations("invoices");
+
+  const SORT_OPTIONS: { value: SortField; label: string }[] = [
+    { value: "issueDate", label: t("columns.issueDate") },
+    { value: "dueDate", label: t("columns.dueDate") },
+    { value: "totalAmount", label: t("columns.amount") },
+    { value: "invoiceNumber", label: t("columns.invoiceNumber") },
+  ];
+
   return (
     <div className="flex items-center gap-2">
       <Select
@@ -58,7 +61,7 @@ export function SortControls({
         variant="outline"
         size="icon"
         onClick={() => onOrderChange(order === "asc" ? "desc" : "asc")}
-        aria-label={`Sort ${order === "asc" ? "descending" : "ascending"}`}
+        aria-label={t(order === "asc" ? "sort.descending" : "sort.ascending")}
       >
         {order === "asc" ? (
           <ArrowUpIcon className="h-4 w-4" />

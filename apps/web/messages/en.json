@@ -45,9 +45,14 @@
       "status": "Status"
     },
     "filters": {
-      "searchPlaceholder": "Search by invoice # or customer",
+      "searchPlaceholder": "Search invoices…",
+      "clearSearch": "Clear search",
       "statusPlaceholder": "Filter by status",
       "allStatuses": "All statuses"
+    },
+    "sort": {
+      "ascending": "Sort ascending",
+      "descending": "Sort descending"
     },
     "pagination": {
       "showing": "Showing {from}–{to} of {total} invoices"

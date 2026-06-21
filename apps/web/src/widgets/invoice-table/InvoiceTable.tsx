@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Table,
@@ -34,21 +35,22 @@ function formatDate(iso: string) {
   });
 }
 
-const COLUMNS = [
-  "Invoice #",
-  "Customer",
-  "Issue Date",
-  "Due Date",
-  "Amount",
-  "Status",
-];
-
 export function InvoiceTable({
   invoices,
   isLoading = false,
   onRowClick,
 }: InvoiceTableProps) {
+  const t = useTranslations("invoices");
   const queryClient = useQueryClient();
+
+  const COLUMNS = [
+    t("columns.invoiceNumber"),
+    t("columns.customer"),
+    t("columns.issueDate"),
+    t("columns.dueDate"),
+    t("columns.amount"),
+    t("columns.status"),
+  ];
 
   return (
     <div className="rounded-md border">
@@ -77,7 +79,7 @@ export function InvoiceTable({
                 colSpan={COLUMNS.length}
                 className="h-32 text-center text-muted-foreground"
               >
-                No invoices found.
+                {t("empty")}
               </TableCell>
             </TableRow>
           ) : (

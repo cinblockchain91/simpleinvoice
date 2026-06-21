@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -9,12 +10,12 @@ import {
 } from "@/shadcn/ui/select";
 import type { InvoiceStatus } from "@/entities/invoice";
 
-const STATUS_OPTIONS: { value: InvoiceStatus | "ALL"; label: string }[] = [
-  { value: "ALL", label: "All statuses" },
-  { value: "PENDING", label: "Pending" },
-  { value: "APPROVED", label: "Approved" },
-  { value: "REJECTED", label: "Rejected" },
-  { value: "VOID", label: "Void" },
+const STATUS_VALUES: (InvoiceStatus | "ALL")[] = [
+  "ALL",
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+  "VOID",
 ];
 
 interface FilterBarProps {
@@ -23,6 +24,12 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ status, onStatusChange }: FilterBarProps) {
+  const t = useTranslations("invoices");
+  const tStatus = useTranslations("common");
+
+  const statusLabel = (value: InvoiceStatus | "ALL") =>
+    value === "ALL" ? t("filters.allStatuses") : tStatus(`status.${value}`);
+
   return (
     <div className="flex items-center gap-3">
       <Select
@@ -30,12 +37,12 @@ export function FilterBar({ status, onStatusChange }: FilterBarProps) {
         onValueChange={(v) => onStatusChange(v as InvoiceStatus | "ALL")}
       >
         <SelectTrigger className="w-44">
-          <SelectValue placeholder="Filter by status" />
+          <SelectValue placeholder={t("filters.statusPlaceholder")} />
         </SelectTrigger>
         <SelectContent>
-          {STATUS_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+          {STATUS_VALUES.map((val) => (
+            <SelectItem key={val} value={val}>
+              {statusLabel(val)}
             </SelectItem>
           ))}
         </SelectContent>
