@@ -1,5 +1,7 @@
 # SimpleInvoice
 
+![SimpleInvoice Demo](.github/demo1.PNG)
+
 > **101 Digital Web Engineer Assessment** — v2.2.4  
 > A production-grade invoicing web application built on Next.js 16, React 19, and TypeScript 5.
 
